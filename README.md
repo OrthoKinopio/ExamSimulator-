@@ -32,7 +32,7 @@
 | 資料夾                | 你會拿到什麼      | 怎麼用                                              |
 | :-------------------- | :---------------- | :-------------------------------------------------- |
 | [`docs/`](docs)       | **13 篇教學文**   | 按課綱順序讀（入門 → 基礎 → 應用）                  |
-| [`pro-kit/`](pro-kit) | **6+ 份武功秘笈** | 貼給你的 Claude Code，AI 會互動帶你裝好             |
+| [`pro-kit/`](pro-kit) | **7+ 份武功秘笈** | 貼給你的 Claude Code，AI 會互動帶你裝好             |
 | [`skills/`](skills)   | **3+ 個技能書**   | 複製到 `~/.claude/skills/` 後用 `/command` 隨叫隨到 |
 
 > 📌 **pro-kit vs skills 的差別**
@@ -72,7 +72,7 @@
 | 2-1  | [讓 AI 記住你的偏好，不再每次從零教](<docs/2-1 讓 AI 記住你的偏好.md>)                 | 🔒 [pro-kit 01 · AI 分身起始助手](<pro-kit/01-agent-folder-setup.md>)                 |
 | 2-2  | [Claude Code 完整架構速覽：還有這些功能可以用](<docs/2-2 Claude Code 完整架構速覽.md>) | 🔒 [pro-kit 02 · Skill Creator 啟動包](<pro-kit/02-skill-creator-bootstrap.md>)       |
 | 2-3  | [把工具授權給 AI，組合出你的每日工作流](<docs/2-3 用 AI 管理你的筆記和每日反思.md>)    | 🔒 [pro-kit 03 · 外部工具整合包（MCP / API / CLI）](<pro-kit/03-tool-integration.md>) |
-| 2-4  | [AI 分身資料夾結構：雷小蒙拆解](<docs/2-4 AI 分身資料夾結構：雷小蒙拆解.md>)           | —（內含跨裝置同步 DIY prompt）                                                       |
+| 2-4  | [AI 分身資料夾結構：雷小蒙拆解](<docs/2-4 AI 分身資料夾結構：雷小蒙拆解.md>)           | 🔒 [pro-kit 07 · 跨裝置同步引導助手](<pro-kit/07-cross-device-sync.md>)               |
 
 ---
 
@@ -102,6 +102,7 @@
 | 04   | [AI 規劃模式（/brainstorm）](<pro-kit/04-brainstorm.md>)                     | [3-1](<docs/3-1 用 Plan Mode 讓 AI 先想清楚再動手.md>)                                       |
 | 05   | [社群圖卡產生器 安裝引導](<pro-kit/05-social-cards.md>)                      | [3-2](<docs/3-2 建立 DESIGN.md 品牌說明書（社群圖卡 & 簡報自動生成）.md>)                    |
 | 06   | [引導式 Landing Page 生成 安裝引導](<pro-kit/06-landing-page.md>)            | [3-5](<docs/3-5 做一個自己的品牌 Landing Page.md>)                                           |
+| 07   | [跨裝置同步引導助手 by 雷小蒙](<pro-kit/07-cross-device-sync.md>)            | [2-4](<docs/2-4 AI 分身資料夾結構：雷小蒙拆解.md>)                                           |
 
 ---
 

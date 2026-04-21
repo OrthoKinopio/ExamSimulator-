@@ -50,8 +50,9 @@
 
 **規則**：
 - 檔名一律英文，方便 URL 引用
-- 編號 01-04 是一次性引導工作流（agent setup、skill creator、tools、brainstorm）
-- 編號 05+ 是「Skill 安裝引導」：pro-kit 只保留行銷段落 + `git sparse-checkout` 指令去 repo 拉 `skills/{name}/`，Skill 本體不再 inline
+- **編號不嚴格對應類別**，依發布順序累加；類別有兩種：
+  - 一次性引導工作流（agent 基建 / 設定類）：01 agent setup、02 skill creator、03 tools、04 brainstorm、07 cross-device sync…
+  - Skill 安裝引導：pro-kit 只保留行銷段落 + `git sparse-checkout` 指令去 repo 拉 `skills/{name}/`，Skill 本體不再 inline（目前為 05 social-cards、06 landing-page）
 
 ### skills/ 招式學習器（常駐 Skill）
 
