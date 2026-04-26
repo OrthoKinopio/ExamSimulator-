@@ -741,40 +741,20 @@ ls -la "$HOME/.claude/skills"  # 應該是 symlink
 >
 > **為什麼要做這一步？** 因為下次你叫 AI「幫我寫一篇貼文」時，它會先翻 `writing-samples/social/` 找 2-3 篇你過去的範例學語氣，而不是憑空想像「雷蒙風格」。你丟越多、AI 越像你。
 >
-> ### 作業 2：開一個新的 Claude Code 對話，跑 Skill Creator（30 分鐘）
+> ### 作業 2：明天開新對話跑 pro-kit 02「Skill Creator 啟動包」
 >
 > **為什麼要開新對話？** 因為 `CLAUDE.md` 要在新 session 才會被載入。
 >
-> 在新對話裡說：
+> pro-kit 02 會幫你：
+> 1. 裝官方 `skill-creator`（一個「能幫你建 Skill 的 Skill」）
+> 2. 訪談你，找出第一個最值得建的 Skill（不用自己挑）
+> 3. 引導你走完整個流程，生出一個能立刻用的 SKILL.md
 >
-> > 幫我建一個 Skill，我平常會用 AI 做 [具體的重複工作]，例如 [具體例子]。請參考 skill-creator 的規則。
->
-> 建議你先從這 3 個最高頻的工作開始：
->
-> 1. **最常寫的內容類型** — 例如「寫社群貼文」「回合作邀約 Email」「寫電子報」
-> 2. **最常重複的查找流程** — 例如「整理今日 AI 新聞」「幫我讀這篇文章並摘要」
-> 3. **最常檢查的清單** — 例如「發文前檢查」「會議前 3 分鐘備稿」
->
-> 每個 Skill 會存到 `000_Agent/skills/[skill-name]/SKILL.md`。之後你只要說「我要寫社群貼文」，AI 就會自動跑完整個流程（翻你的 writing-samples、套你的語氣、輸出到 drafts/）。
->
-> **Skill 跟 CLAUDE.md 的差別？** `CLAUDE.md` 是每次都載入的**通用規則**，Skill 是**特定任務**才會被觸發的工作流程。你越多 Skill，你的 AI 分身就越能處理你真實的工作，而不是只會聊天。
->
-> ### 作業 3（強烈建議）：先裝官方 Skill Creator
->
-> 你不用自己從零學 SKILL.md 的語法，Anthropic 官方出了一個 `skill-creator`，**它是一個「能幫你建立 skill 的 skill」**。裝了之後，作業 2 會變得超簡單：你只要打 `/skill-creator` 加一段描述，它會用引導問答的方式把 SKILL.md 幫你生好。
->
-> 裝法：在新對話貼這段給 AI：
->
-> > 我要安裝 Anthropic 官方的 skill-creator skill。
-> > 來源：https://github.com/anthropics/skills/tree/main/skills/skill-creator
-> >
-> > 請用 git sparse-checkout 只拉 skills/skill-creator 這一個子資料夾（不要整個 clone），安裝到 `000_Agent/skills/skill-creator/`（因為我已經用 AI 分身起始助手把 `~/.claude/skills` symlink 到 `000_Agent/skills/` 了）。裝完後讀一下 SKILL.md 的 frontmatter 確認 name 是 skill-creator，最後告訴我打 `/skill-creator` 能不能看到它。
->
-> 裝好以後直接進作業 2，Skill Creator 會接手引導你。
+> 細節都在 [pro-kit 02 「Skill Creator 啟動包」](https://github.com/lifehacker-tw/claude-code-mini-course/blob/master/pro-kit/02-skill-creator-bootstrap.md)，明天再開新對話貼給 Claude Code 就好。今天先到這裡。
 >
 > ---
 >
-> **最後一個小提醒：記得現在就關掉這個對話，開一個新的 Claude Code 對話 AI 才會讀到新的 `CLAUDE.md`。** 今天先不用做作業 1、2、3，今天的任務已經完成了。
+> **最後一個小提醒：記得現在就關掉這個對話，開一個新的 Claude Code 對話 AI 才會讀到新的 `CLAUDE.md`。** 今天先不用做作業 1、2，今天的任務已經完成了。
 
 ---
 
@@ -862,41 +842,10 @@ awk '/AI 分身起始助手紀錄:START/,/AI 分身起始助手紀錄:END/' CLAU
 
 ## 常見問題
 
-**Q：Skill 放在「專案裡的 `000_Agent/skills/`」和「系統層 `~/.claude/skills/`」差在哪？我該選哪個？**
-Claude Code 預設**只**會從 `~/.claude/skills/` 載入 skill（系統層級、隱藏資料夾）。專案層級的 `.claude/skills/` 並**不會**被自動當成 skill 來源。所以如果你把 skill 寫在 `000_Agent/skills/`，原生機制讀不到，**除非你做一個 symlink 把原生位置指過去**。AI 分身起始助手 by 雷小蒙的 B-5 步驟就是在做這件事：`~/.claude/skills` 會變成指向 `000_Agent/skills/` 的捷徑，你寫檔案時在可見的專案內寫，Claude Code 讀的時候還是從原生位置讀到。好處：（1）skill 不在隱藏資料夾，打開 Finder 就看到；（2）換電腦時整個專案搬走、重跑一次 `ln -s` 就好，不用挖 `~/.claude/`；（3）skill 可以跟專案一起 git 版控、傳給朋友。
-
-**Q：我只有一台電腦，不用 iCloud 同步，還需要做這個 symlink 嗎？**
-**強烈建議還是做。** 原因有三層，最後一層最重要：
-
-1. **可見性** — 隱藏資料夾 `~/.claude/` 對非工程師是惡夢：要 `Cmd+Shift+.` 才看得到，備份時常被漏掉。改成 symlink 後，你所有的 skill 都在**可見、可拖曳、可打包**的 `000_Agent/skills/` 裡。
-2. **換電腦簡單** — 未來換電腦時整個專案資料夾搬走、重跑一次 `ln -s` 就好，不用挖 `~/.claude/`。
-3. **換 AI 大腦也簡單（這一層才是重點）** — 現在 Claude Code 是最強的大腦，但下一代一定會有更強的出現。當那一天到來，你希望是「整個專案資料夾打包丟給新的 AI、它立刻讀得到你所有的 skill、記憶、過去作品」，還是「再去 `~/.claude/` 挖一次隱藏檔案、再搬一次家、再重建一次基建」？**這個時代的正確姿勢是讓資料具備可攜性，不被單一 AI 綁死**。你所有投入的寫作風格素材、糾正過的 feedback、建過的 workflow，都應該屬於你這個人，而不是屬於某個特定版本的 AI 產品。Symlink 是你今天能做的最低成本防呆。
-
 **Q：我重跑一次AI 分身起始助手 by 雷小蒙會怎樣？會把我的記憶蓋掉嗎？**
 不會。邊界標記 `<!-- AI 分身起始助手紀錄:START/END -->` 就是為了這個設計的。重跑時 AI 會偵測到舊區塊，跳 AskUserQuestion 問你要「更新 / 保留 / 並存」。你選「更新」只會換掉 START/END 之間的內容，標記外面你自己寫的規則、跟 AI 磨合出的 NEVER/ALWAYS、MEMORY.md 的偏好與踩坑，全部都在。
 
-**Q：我已經有一堆散亂的檔案怎麼辦？**
-先建骨架、再慢慢分批搬。不用一天搬完。你可以先把「最得意的 10 個東西」丟進 `200_Reference/`，其他的放著慢慢整理。
-
-**Q：我可以改資料夾名字嗎？例如把 `200_Reference/` 改成 `200_Lib/`？**
-可以，但記得**同步改 `CLAUDE.md` 的路由表**，不然 AI 會找不到路徑。建議改完以後在對話裡跟 AI 說一次「我把 200_Reference/ 改成 200_Lib/ 了」，讓它更新記憶。
-
-**Q：iCloud / Dropbox / Google Drive 可以同步嗎？**
-可以。iCloud 在 macOS 路徑是 `~/Library/Mobile Documents/...`，會自動跨裝置同步。Dropbox 放在 `~/Dropbox/` 裡。好處：你兩台電腦都能用同一個 AI 分身、共用 `MEMORY.md` 和 `skills/`。壞處：要注意別讓兩台電腦同時寫入同一個檔案（會衝突）。
-
-**Q：Windows 怎麼辦？**
-資料夾結構完全一樣，只是 bash 指令要換成 PowerShell 的 `New-Item -ItemType Directory -Path "000_Agent/skills" -Force`。或者直接裝 WSL（Windows Subsystem for Linux）用 Ubuntu 的 bash。
-
-**Q：我不會寫程式，這些 Skill、MEMORY.md 會不會太難？**
-不會。你完全不需要碰程式碼。你要做的只有：
-1. 把你的作品丟進對的資料夾
-2. 用一般對話跟 AI 說「我想要做 XX」
-3. AI 自己會去讀 CLAUDE.md、自己會去翻資料夾、自己會寫進 MEMORY.md
-
-你的工作是「餵資料 + 糾正 AI」，其他都是 AI 自己做。
-
-**Q：CLAUDE.md 裡的「自我進化機制」那段，AI 真的會照做嗎？**
-會，但前提是你要**主動糾正**。AI 不會自己發明新偏好，它只會在你說「這樣不對，我想要 XX」的時候寫下來。所以一開始的 2-3 週，你要多花一點時間跟它 back-and-forth，記憶就會開始長出來。3 週後你會明顯感覺到 AI 越來越像你。
+> **其他常見問題**（Skill 路徑/symlink 為什麼要做/換電腦/Windows/iCloud 同步/不會寫程式怎麼辦/自我進化機制）請見迷你課單元 [2-1 讓 AI 記住你的偏好](<../docs/2-1 讓 AI 記住你的偏好.md#常見問題>)。
 
 ---
 
