@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>113年骨科部住院醫師 第二次模擬考</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1f2436;
+    --border: #2a3050;
+    --accent: #4f8ef7;
+    --accent2: #7c5cbf;
+    --correct: #2ecc71;
+    --wrong: #e74c3c;
+    --text: #e8ecf4;
+    --muted: #7a85a3;
+    --gold: #f0c040;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #0d1228 0%, #1a1040 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo-text h1 { font-family: 'Noto Serif TC', serif; font-size: 16px; font-weight: 700; }
+  .logo-text p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .header-stats { display: flex; gap: 24px; }
+  .stat { text-align: center; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--accent); font-family: 'Noto Serif TC', serif; }
+  .stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ─── PROGRESS ─── */
+  .progress-wrap { padding: 0 32px; margin-top: 16px; }
+  .progress-bar-bg {
+    height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px; transition: width 0.4s ease;
+  }
+
+  /* ─── FILTERS ─── */
+  .filters {
+    padding: 16px 32px;
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 500; }
+
+  /* ─── MAIN ─── */
+  main { padding: 24px 32px 80px; max-width: 900px; margin: 0 auto; }
+
+  /* ─── QUESTION CARD ─── */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .q-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .q-card.answered-correct::before { background: var(--correct); }
+  .q-card.answered-wrong::before { background: var(--wrong); }
+
+  .q-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+  .q-num {
+    min-width: 36px; height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: var(--muted);
+    flex-shrink: 0;
+  }
+  .q-category {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); font-weight: 600; margin-bottom: 4px;
+  }
+  .q-text { font-size: 15px; line-height: 1.7; color: var(--text); }
+  .q-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ─── OPTIONS ─── */
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .option {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px; line-height: 1.6;
+  }
+  .option:hover:not(.disabled) { border-color: var(--accent); background: rgba(79,142,247,0.08); }
+  .option-label {
+    min-width: 26px; height: 26px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    flex-shrink: 0; transition: all 0.2s;
+  }
+  .option.correct { background: rgba(46,204,113,0.12); border-color: var(--correct); }
+  .option.correct .option-label { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .option.wrong { background: rgba(231,76,60,0.12); border-color: var(--wrong); }
+  .option.wrong .option-label { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+  .option.disabled { cursor: default; }
+
+  /* ─── EXPLANATION ─── */
+  .explanation {
+    margin-top: 18px;
+    padding: 18px 20px;
+    background: rgba(79,142,247,0.07);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 10px;
+    font-size: 13.5px; line-height: 1.8;
+    color: #c5d0e8;
+    display: none;
+  }
+  .explanation.show { display: block; animation: fadeIn 0.3s ease; }
+  .explanation .exp-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); font-weight: 700; margin-bottom: 10px;
+  }
+  .explanation .correct-mark {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.3);
+    color: var(--correct); padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; margin-bottom: 10px;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── RESULT BADGE ─── */
+  .result-badge {
+    position: absolute; top: 16px; right: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .result-badge.correct { background: rgba(46,204,113,0.15); color: var(--correct); }
+  .result-badge.wrong { background: rgba(231,76,60,0.15); color: var(--wrong); }
+
+  /* ─── SCORE CARD ─── */
+  .score-card {
+    background: linear-gradient(135deg, #1a1040 0%, #0d1228 100%);
+    border: 1px solid var(--accent2);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 32px;
+    display: none;
+  }
+  .score-card.show { display: block; animation: fadeIn 0.5s ease; }
+  .score-big { font-size: 72px; font-weight: 700; font-family: 'Noto Serif TC', serif; color: var(--gold); }
+  .score-sub { color: var(--muted); font-size: 14px; margin-top: 8px; }
+  .score-grade { font-size: 24px; font-weight: 700; margin-top: 16px; }
+
+  /* ─── NAV BUTTONS ─── */
+  .nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(15,17,23,0.95);
+    border-top: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(10px);
+  }
+  .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #6a9ef8; }
+  .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(231,76,60,0.15); color: var(--wrong); border: 1px solid rgba(231,76,60,0.3); }
+  .btn-danger:hover { background: rgba(231,76,60,0.25); }
+
+  .nav-info { color: var(--muted); font-size: 13px; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty { text-align: center; padding: 60px; color: var(--muted); }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🦴</div>
+    <div class="logo-text">
+      <h1>113年骨科部住院醫師</h1>
+      <p>第二次模擬考 · 是非題 100題</p>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-val" id="stat-answered">0</div>
+      <div class="stat-lbl">已作答</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="stat-correct" style="color: var(--correct)">0</div>
+      <div class="stat-lbl">答對</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="stat-wrong" style="color: var(--wrong)">0</div>
+      <div class="stat-lbl">答錯</div>
+    </div>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" onclick="filterQuestions('all')">全部 (100)</button>
+  <button class="filter-btn" onclick="filterQuestions('unanswered')">未作答</button>
+  <button class="filter-btn" onclick="filterQuestions('correct')">已答對</button>
+  <button class="filter-btn" onclick="filterQuestions('wrong')">已答錯</button>
+</div>
+
+<main id="main">
+  <div class="score-card" id="scoreCard">
+    <div style="font-size:14px; color: var(--muted); margin-bottom:8px;">最終成績</div>
+    <div class="score-big" id="scoreBig">--</div>
+    <div class="score-sub">100 題中答對 <span id="scoreCorrect">0</span> 題</div>
+    <div class="score-grade" id="scoreGrade"></div>
+  </div>
+  <div id="quizContainer"></div>
+</main>
+
+<div class="nav-bar">
+  <div class="nav-info" id="navInfo">顯示 100 題</div>
+  <div style="display:flex; gap:10px;">
+    <button class="btn btn-danger" onclick="resetAll()">重新作答</button>
+    <button class="btn btn-primary" onclick="showScore()">顯示成績</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // Q1
+  { id:1, group:"胸腰椎疾病", text:"關於胸腰椎疾病的臨床表現", subs: [
+    { sub:"A", text:"常混合有軸性背痛(axial back pain)與神經根症狀(radicular symptoms)。", answer:true, exp:"胸腰椎病變同時具有局部疼痛（軸性）與沿神經根分佈的放射痛（radicular），兩者常並存。" },
+    { sub:"B", text:"軸性背痛包括 Muscular back pain, discogenic back pain 以及 mechanical back pain。", answer:true, exp:"軸性背痛三大來源：肌肉性、椎間盤性、機械性（脊椎不穩定/關節面問題）。" },
+    { sub:"C", text:"Mechanical back pain 與脊椎的不穩定(instability)無關。", answer:false, exp:"Mechanical back pain 主要成因之一就是脊椎節段的不穩定（instability），如 spondylolisthesis 造成的不穩定會直接導致機械性背痛。" },
+    { sub:"D", text:"軸性背痛常以手術方式治療。", answer:false, exp:"軸性背痛首選保守治療（物理治療、藥物、復健），手術指征有限，通常只在保守治療失敗且有明確結構性病因時才考慮。" }
+  ]},
+  // Q2
+  { id:2, group:"胸椎椎間盤突出", text:"關於胸椎椎間盤突出(Thoracic disc herniation)的敘述", subs: [
+    { sub:"A", text:"有症狀的胸椎椎間盤突出約占發生率的0.5%，比腰椎椎間盤突出常見。", answer:false, exp:"胸椎椎間盤突出在影像上普遍，但有症狀者約0.5%，遠比腰椎椎間盤突出少見，不是「比較常見」。" },
+    { sub:"B", text:"常發生在下胸椎(lower thoracic spine)，是因為該區域的運動性(mobility)及機械應力(mechanical stress)較大。", answer:true, exp:"下胸椎（T8-T12）相較中上胸椎活動度較大，承受的機械應力也較高，因此椎間盤突出好發於此。" },
+    { sub:"C", text:"胸椎椎間盤切除術可以像標準的腰椎椎間盤切除術一般從後路進入進行切除。", answer:false, exp:"胸椎椎間盤突出（尤其中央型）不適合標準後路手術，因脊髓在此處沒有足夠的空間讓外科醫師操作，常需側路（transthoracic）或後側路（posterolateral）入路。" },
+    { sub:"D", text:"中央鈣化的突出椎間盤(Central calcified herniated disc)適合用 posterolateral 的方式進行切除。", answer:false, exp:"中央鈣化的胸椎椎間盤突出體積大且與脊髓緊密黏連，posterolateral 入路視野不足，多需 transthoracic anterior 入路。" }
+  ]},
+  // Q3
+  { id:3, group:"腰椎滑脫", text:"關於腰椎滑脫(Lumbar spondylolisthesis)的敘述", subs: [
+    { sub:"A", text:"依據 Wiltse 的分類，可分為五大類。", answer:true, exp:"Wiltse 分類：I先天型/發育不良、II峽部型、III退化型、IV創傷型、V病理型，共五大類。" },
+    { sub:"B", text:"退化性滑脫(Degenerative spondylolisthesis)為最常見。", answer:true, exp:"退化性滑脫（Wiltse III型）是臨床最常見類型，好發於中老年女性，常見於L4-L5節段。" },
+    { sub:"C", text:"逆滑脫(retrolisthesis)會在椎間孔或側隱窩造成明顯的神經壓迫。", answer:false, exp:"Retrolisthesis（上位椎體向後滑）主要造成椎間孔增大，反而較少造成神經壓迫；與 anterolisthesis 不同，anterolisthesis 才會縮小椎間孔及側隱窩。" },
+    { sub:"D", text:"Meyerding 分級系統是最廣為接受的滑脫程度分級系統，可分為4個等級。", answer:false, exp:"Meyerding 分5級（I~V，含完全脫位 spondyloptosis 為V），而非4個等級。I：0-25%，II：25-50%，III：50-75%，IV：75-100%，V：>100%。" }
+  ]},
+  // Q4
+  { id:4, group:"脊椎骨盆參數", text:"關於脊椎骨盆區域參數和整體參數的描述", subs: [
+    { sub:"A", text:"骨盆入射角（PI）是指從骶骨終板中點到股骨頭中心的線與垂直參考線之間的角度，等於PT與SS的總和。", answer:false, exp:"PI 是骶骨終板中垂線與連接骶骨終板中點到股骨頭中心線的夾角（非與「垂直參考線」的夾角）。公式 PI = PT + SS 是對的，但角度定義描述有誤。" },
+    { sub:"B", text:"L4-S1 lordosis 是指穿過 L4上端板與 S1上端板的線的夾角，整體腰椎前凸的三分之二源自 L4-S1。", answer:true, exp:"腰椎前凸約2/3集中在 L4-S1 兩節，因此 L4-S1 lordosis 是臨床上重要的局部參數。" },
+    { sub:"C", text:"腰椎前凸（LL）是指穿過 L1上端板與 S1上端板的線的夾角。", answer:true, exp:"LL 標準測量為 L1 上端板到 S1 上端板的 Cobb 角，正常值約40-60°。" },
+    { sub:"D", text:"PT 大於20°表示骨盆前傾，這是患者對於矢狀不平衡的一種補償方式。", answer:false, exp:"PT 增大（>20°）代表骨盆「後傾」（retroversion），是代償矢狀面失衡的方式。骨盆前傾（anteversion）反而是 PT 減小。" }
+  ]},
+  // Q5
+  { id:5, group:"MIS TLIF", text:"關於 MIS TLIF 的敘述", subs: [
+    { sub:"A", text:"適應症與 open TLIF 相同。", answer:true, exp:"MIS TLIF 適應症如腰椎滑脫、退化性椎間盤疾病、椎管狹窄等與 open TLIF 相同，只是入路方式不同。" },
+    { sub:"B", text:"嚴重的骨質疏鬆是禁忌症之一。", answer:true, exp:"嚴重骨質疏鬆影響椎弓根螺釘穩定度，MIS TLIF 更難術中補救，為相對禁忌症。" },
+    { sub:"C", text:"縮短住院時間、減少術後併發症、失血量少為其優點。", answer:true, exp:"MIS TLIF 利用管狀牽開器，減少肌肉剝離及失血，住院時間、術後疼痛及併發症均優於 open TLIF。" },
+    { sub:"D", text:"存在明顯學習曲線。", answer:true, exp:"MIS TLIF 視野受限，需熟悉三維解剖及透視導引，學習曲線明顯，早期手術時間較長。" }
+  ]},
+  // Q6
+  { id:6, group:"骨轉移", text:"關於惡性腫瘤骨轉移的敘述", subs: [
+    { sub:"A", text:"40歲以上成年人最常見造成破壞性骨損傷的原因包括轉移性癌症、多發性骨髓瘤以及淋巴癌。", answer:true, exp:"40歲以上溶骨性/破壞性骨病變三大原因：骨轉移、多發性骨髓瘤、淋巴瘤，原發性骨肉瘤反而少見。" },
+    { sub:"B", text:"RANKL pathway 是轉移性骨病病理生理學的核心，腫瘤細胞刺激骨母細胞分泌 RANKL，與破骨細胞前驅細胞上的 RANK 結合，加強破骨細胞生成。", answer:true, exp:"腫瘤細胞→刺激成骨細胞分泌 RANKL→與 RANK 結合→破骨細胞活化→骨破壞→釋放 TGF-β 等生長因子→促腫瘤生長，形成惡性循環。" },
+    { sub:"C", text:"前列腺癌的骨轉移表現為溶骨性(osteolytic)。", answer:false, exp:"前列腺癌骨轉移以成骨性（osteoblastic/sclerotic）為主，影像上骨密度增加。乳癌及肺癌較常見溶骨性轉移。" },
+    { sub:"D", text:"轉移性肺癌具有獨特的肢端(acral metastases)好發部位，主要影響手肘和膝蓋的近端骨骼部位。", answer:false, exp:"肺癌確有 acral metastases（手足末梢）的特點，但好發在手足的「遠端」（腳趾、手指等），而非手肘膝蓋近端。" }
+  ]},
+  // Q7
+  { id:7, group:"骨轉移治療", text:"關於惡性腫瘤骨轉移的治療", subs: [
+    { sub:"A", text:"轉移性肺癌與腎癌對生長因子抑制劑的反應特別靈敏。", answer:true, exp:"腎細胞癌（靶向 VEGF/mTOR）和部分肺癌（EGFR/ALK 抑制劑）對標靶治療反應良好，這也影響骨轉移的手術決策。" },
+    { sub:"B", text:"釤-153和氯化鍶-89是常用於骨骼放射線治療的核種。", answer:true, exp:"Samarium-153 (¹⁵³Sm-EDTMP) 和 Strontium-89 Cl 均是常用的系統性放射性同位素，用於廣泛骨轉移的疼痛控制。" },
+    { sub:"C", text:"Denosumab 可抑制破骨細胞的活性，主要副作用為可能造成下巴骨壞死。", answer:false, exp:"Denosumab 是 RANKL 抑制劑（非 RANK 抑制劑），可防止 SRE，副作用確實包括顎骨壞死（ONJ），但此選項描述機制正確、副作用正確，關鍵錯誤在教材版本—依答案標示此題為X，可能考點在於 denosumab 並非「主要」副作用的描述方式或其他細節差異。" },
+    { sub:"D", text:"骨轉移疾病的骨科手術治療目的在解除疼痛、改善功能及恢復骨骼的穩定性、以及預防或治療病理性骨折。", answer:true, exp:"骨轉移手術四大目標：疼痛緩解、功能改善、骨骼穩定、預防/治療病理性骨折，以提升生活品質為主。" }
+  ]},
+  // Q8
+  { id:8, group:"椎間盤", text:"關於椎間盤的敘述", subs: [
+    { sub:"A", text:"成人椎間盤的營養供應是透過椎體內的 terminal capillaries 經擴散作用供應。", answer:true, exp:"成熟的椎間盤本身無血管，營養靠軟骨終板下方的毛細血管床（terminal capillaries）擴散進入，是椎間盤退化的重要機制。" },
+    { sub:"B", text:"nucleus pulposus 內含 Aggrecans，是疏水性物質，會減少椎間盤內的靜水壓。", answer:false, exp:"Aggrecan 是親水性蛋白聚醣（proteoglycan），帶大量負電荷，吸引水分，因此會「增加」椎間盤內的靜水壓（hydrostatic pressure），提供抗壓能力。" },
+    { sub:"C", text:"anulus fibrosus 內的纖維分布是橫向的，可以抵抗 rotational movements 的張力。", answer:false, exp:"Annulus fibrosus 的纖維以斜向排列（約±30°），每層交替方向，可抵抗扭轉力。並非「橫向」排列。" },
+    { sub:"D", text:"椎間盤內的 extracellular matrix(ECM)，可以提供對抗 compressive forces 的支撐。", answer:true, exp:"ECM 中的 aggrecan、collagen 和 hyaluronic acid 共同構成抗壓結構，nucleus pulposus 的靜水壓和 annulus fibrosus 的張力一起分散壓縮負荷。" }
+  ]},
+  // Q9
+  { id:9, group:"脊椎理學檢查", text:"關於脊椎的理學檢查和輔助檢查", subs: [
+    { sub:"A", text:"Trendelenburg gait 與 L5 nerve root compression 有關，病人骨盆向受影響側下掉，軀幹往正常側傾斜。", answer:false, exp:"Trendelenburg gait 確與 L5 壓迫造成臀中肌無力有關，但骨盆下掉方向為「正常側」（非患側），而軀幹代償性往「患側」傾斜（Duchenne gait），描述方向相反。" },
+    { sub:"B", text:"關節內注射局部麻醉無法幫助確認疼痛來源是否來自於 SI joint。", answer:false, exp:"SI joint（骶髂關節）的診斷性注射（局部麻醉劑）是目前公認的診斷標準（gold standard），注射後疼痛緩解≥50%支持診斷。" },
+    { sub:"C", text:"如果懷疑 cervical radiculopathy 合併 peripheral neuropathy，needle EMG 可診斷 radiculopathy，nerve conduction studies 可評估 entrapment neuropathies。", answer:true, exp:"Needle EMG 偵測失神經支配（denervation）的肌肉，提示神經根病變；NCS 評估周邊神經傳導速度和振幅，可定位卡壓位置，兩者互補。" },
+    { sub:"D", text:"Arm squeeze test 被認為有可能在區分 shoulder 和 cervical 病因上很有幫助。", answer:true, exp:"Arm squeeze test：擠壓上臂中段引發頸部放射痛，sensitivity/specificity 優於部分傳統頸椎理學檢查，有助於鑑別肩部病因和頸椎根性病變。" }
+  ]},
+  // Q10
+  { id:10, group:"脊椎結核", text:"關於 Spinal tuberculosis 的敘述", subs: [
+    { sub:"A", text:"Spinal tuberculosis 通常位於椎體後側(posterior body)和 lumbar spine。", answer:false, exp:"脊椎結核好發在椎體前方（anterior body），因前縱韌帶下蔓延，常跨越椎間盤累及相鄰椎體；好發部位為胸腰椎交界（T10-L2），而非單純 lumbar spine。" },
+    { sub:"B", text:"Spinal tuberculosis and tumor metastasis 都會有 disk space sparing 的表現，須小心鑑別診斷。", answer:true, exp:"腫瘤轉移通常 skip the disc（跨越椎間盤，因為椎間盤無血管），但脊椎結核早期也可 spare the disc，兩者須仔細鑑別。椎間盤受侵犯反而較支持感染性病因。" },
+    { sub:"C", text:"藥物治療使用 Anti-TB therapy 只需3個月。", answer:true, exp:"根據考試答案標示為O，WHO 建議脊椎結核 anti-TB 療程為6-9個月（一線 HRZE 2個月 + HR 4個月），但部分指引在無併發症時最短6個月，考題這裡標為正確，依答案作答。" },
+    { sub:"D", text:"手術適應症是 neurologic deficit, 藥物治療無效, progressive kyphotic deformity。", answer:true, exp:"脊椎結核手術三大指征：(1)神經功能缺損，(2)藥物治療失敗/膿腫不退，(3)進行性後凸變形需矯正/預防脊髓損傷。" }
+  ]},
+  // Q11
+  { id:11, group:"原發性脊椎腫瘤", text:"對於原發性脊椎腫瘤的敘述", subs: [
+    { sub:"A", text:"原發性脊椎腫瘤以頸椎為最好發位置。", answer:false, exp:"原發性脊椎腫瘤中，良性腫瘤（如 hemangioma、osteoblastoma）好發於後方結構；惡性腫瘤（如 chordoma）好發於骶尾部。頸椎並非最常見位置。" },
+    { sub:"B", text:"惡性的原發性腫瘤常見的有 Chordoma 和 multiple myeloma。", answer:true, exp:"脊椎原發惡性腫瘤：Chordoma（最常見脊椎原發惡性）、Multiple myeloma（最常見骨骼惡性腫瘤整體）是重要考點。" },
+    { sub:"C", text:"良性的原發性腫瘤且發生在脊柱前方(anterior elements)的有 osteoblastoma, osteoid osteoma and osteochondroma。", answer:false, exp:"Osteoblastoma 和 osteoid osteoma 好發於脊椎「後方結構」（posterior elements，如椎弓、椎板），而非前方椎體。Osteochondroma 可發生在後方結構。" },
+    { sub:"D", text:"若是硬腦膜內(intradural)腫瘤，髓內(intramedullary)腫瘤起源於神經根。", answer:false, exp:"Intramedullary 腫瘤（如 ependymoma、astrocytoma）起源於脊髓本身的膠質細胞；起源於神經根的腫瘤（neurofibroma、schwannoma）多為 extramedullary-intradural。" }
+  ]},
+  // Q12
+  { id:12, group:"先天性脊椎側彎", text:"有關 Congenital Scoliosis 的描述", subs: [
+    { sub:"A", text:"可大致區分為兩大類：failure of vertebral formation 或 Segmentation。", answer:true, exp:"先天性脊椎側彎分類：(1) Failure of formation（半椎體等）和 (2) Failure of segmentation（block vertebra、unilateral bar等），也可混合型。" },
+    { sub:"B", text:"需要注意患者是否有 genitourinary system 與 cardiac anomalies。", answer:true, exp:"先天性脊椎側彎與 VACTERL association 相關，泌尿生殖系統異常約20%，心臟異常約10-12%，需常規篩查。" },
+    { sub:"C", text:"背架治療在此類患者並無角色，不僅無法改變 natural history 且對 curve 也無幫助。", answer:false, exp:"背架（bracing）雖無法改變先天性脊椎側彎的自然病程，但有時可用於代償性彎曲（compensatory curves）的控制，或延緩手術時機，並非完全無角色。" },
+    { sub:"D", text:"可考慮使用 growing rod 或是 VEPTR。", answer:true, exp:"生長棒（growing rod）和 VEPTR（Vertical Expandable Prosthetic Titanium Rib）用於幼童，在控制彎曲同時維持脊椎生長，是先天性脊椎側彎手術的重要選項。" }
+  ]},
+  // Q13
+  { id:13, group:"骨骼肌肉影像學", text:"關於骨骼肌肉影像學的敘述", subs: [
+    { sub:"A", text:"在兒童族群有許多良性骨腫瘤，radiography 在診斷上較無角色。", answer:false, exp:"一般 X 光仍是骨腫瘤診斷的第一步驟，許多良性骨腫瘤（如 NOF、UBC、osteochondroma）具有特徵性 X 光表現，有時 X 光即可確診，不需進一步影像。" },
+    { sub:"B", text:"Dual-energy CT 可以減少金屬假影並偵測到 gout 裡的 monosodium urate crystal。", answer:true, exp:"DECT 利用不同能量 X 光對物質的衰減差異，可(1)減少金屬假影，(2)直接偵測並顯示 MSU 結晶（對通風石/關節尿酸沉積敏感性高）。" },
+    { sub:"C", text:"subacute hematoma 在 T1 呈現 hypointense（相較於 muscle）。", answer:false, exp:"Subacute hematoma 因含 methemoglobin，在 T1 上呈現「hyperintense」（高訊號），是 MRI 辨識 subacute 出血的關鍵。T1 hypointense 是 acute/chronic hematoma 的表現。" },
+    { sub:"D", text:"Three-phase bone scan 依照順序包括 flow phase、blood pool phase 及 delayed phase。", answer:true, exp:"三相骨掃描：(1) Flow phase（注射後即時，血流）、(2) Blood pool phase（2-5分鐘，軟組織充血）、(3) Delayed/static phase（2-4小時，骨代謝活動）。" }
+  ]},
+  // Q14
+  { id:14, group:"周術期評估", text:"關於術前後照護的描述", subs: [
+    { sub:"A", text:"若術前 HbA1C 超過7%，接受脊椎融合手術有顯著較高風險發生 surgical site infection。", answer:true, exp:"HbA1C > 7% 與術後 SSI 顯著相關，多項研究支持將術前血糖控制納為脊椎手術術前優化指標。" },
+    { sub:"B", text:"所有研究都顯示香菸成份裡的 nicotine 會減少骨生成。", answer:false, exp:"Nicotine 對骨生成的影響有爭議。部分研究顯示 nicotine 本身反而可能有些許促成骨效果，而 cigarette 的其他成分（CO、氧化物）才是主要造成骨癒合不良的原因。並非「所有研究」一致。" },
+    { sub:"C", text:"SEVERE SLE-specific medication 在 perioperative period 需停藥。", answer:false, exp:"SLE 用藥（如 hydroxychloroquine、低劑量類固醇）多數不需停藥，甚至停藥可能誘發疾病發作增加手術風險。高劑量免疫抑制劑需個別評估，並非一律停藥。" },
+    { sub:"D", text:"HIV 病患只要控制良好，仍可接受 joint arthroplasty。", answer:true, exp:"HIV 患者 CD4 > 200 cells/μL 且 viral load 受控的情況下，接受全關節置換的感染率與一般患者相當，是可行且安全的治療選項。" }
+  ]},
+  // Q15
+  { id:15, group:"手腕解剖", text:"關於手部與手腕解剖學的近期演進", subs: [
+    { sub:"A", text:"研究發現存在兩種不同類型的舟骨（完整型和細長型），且每種類型的血管供應各不相同。", answer:true, exp:"2019年 micro-CT 研究將舟骨分為 complete 和 elongated 兩型，兩型血管供應模式不同，影響骨折後骨壞死風險及手術入路選擇。" },
+    { sub:"B", text:"就最大限度地減少血管破壞而言，順行（antegrade）插入（背側到掌側）對血管的破壞比較多。", answer:false, exp:"研究顯示逆行（retrograde，遠端到近端）插入對舟骨近端血管破壞較多；順行（antegrade，背側到掌側）入路血管破壞相對較少，適合保護近端血管。" },
+    { sub:"C", text:"2020年研究解剖24具新鮮冷凍屍體，展示用於定位拇指橈側和尺側神經的分叉位置的新表面標誌。", answer:false, exp:"依考題答案此項為X，可能在於標誌的確切定義或該研究應用範圍有誤，非急性損傷治療新用途。" },
+    { sub:"D", text:"在化膿感染案例中，近端指骨掌側與背側軟組織厚度比總是大於1。", answer:true, exp:"在手指屈肌腱鞘化膿感染時，掌側軟組織水腫更明顯，掌側/背側厚度比 > 1 是診斷滑膜內感染的可靠超音波指標。" }
+  ]},
+  // Q16-20 (simplified explanations)
+  { id:16, group:"手部感染與血管", text:"關於手部與手腕的感染與血管疾病", subs: [
+    { sub:"A", text:"慢性上肢血管疾病可分為血管痙攣性疾病和閉塞性疾病，治療取決於副血管循環和嚴重程度。", answer:true, exp:"上肢慢性血管病分兩大類：vasospastic（如 Raynaud's phenomenon）和 occlusive（如動脈硬化、Buerger's disease）。治療方針確依據側支循環（collateral circulation）狀態和缺血嚴重度。" },
+    { sub:"B", text:"CT 可用於主要評估膿腫的工具。", answer:false, exp:"手部感染首選影像為超音波（快速、無輻射、可動態評估），CT 並非主要評估工具；MRI 更適合評估深部感染範圍。" },
+    { sub:"C", text:"掌屈腱鞘炎所有患者都會出現所有 Kanavel 徵象。", answer:false, exp:"Kanavel 四大徵象（均勻腫脹、半屈姿勢、被動伸直痛、腱鞘壓痛）並非全部患者都出現，早期或部分感染可能不完整。" },
+    { sub:"D", text:"足部牽連受累是手部蜂窩性組織炎住院的獨立危險因子。", answer:false, exp:"手部蜂窩性組織炎住院危險因子包括：手指/手背受累、合併症（糖尿病、免疫抑制）、發燒等；「足部受累」與手部感染無關。" }
+  ]},
+  { id:17, group:"手部關節炎", text:"關於手部關節炎和治療", subs: [
+    { sub:"A", text:"金屬-聚乙烯和熱解碳植入物通常不建議用於因 RA 關節破壞而缺乏穩定性的患者。", answer:true, exp:"RA 造成周邊軟組織破壞和韌帶不穩定，金屬-聚乙烯和 pyrocarbon 需依賴完整的軟組織穩定，RA 不穩定情況下容易失敗，故不建議。" },
+    { sub:"B", text:"矽膠植入物的中期數據顯示較高的翻修率。", answer:false, exp:"矽膠（silicone）植入物（如 Swanson 假體）中期資料顯示相對耐久，PC（pyrocarbon）植入物才在中期追蹤中顯示較高的翻修率和 subsidence 問題。兩者評價相反。" },
+    { sub:"C", text:"PIP 關節融合理想位置：食指40°，中指45°，無名指50°，小指55°。", answer:true, exp:"PIP 關節融合角度依手指功能遞增：食指（夾捏為主）最小，小指（握力為主）最大，符合 cascade position 原則。" },
+    { sub:"D", text:"拇指 MCP 關節炎非手術治療失敗後，通常透過關節成形術治療。", answer:false, exp:"拇指 MCP 關節炎手術治療首選「融合術（arthrodesis）」，而非關節成形術，因為拇指 MCP 需要穩定的支撐柱（stable post），活動度相對次要。" }
+  ]},
+  { id:18, group:"上肢神經病變", text:"有關上肢神經病變", subs: [
+    { sub:"A", text:"Cubital Tunnel Syndrome 主要症狀包括大拇指、食指、中指和無名指的感覺異常。", answer:false, exp:"Cubital tunnel syndrome 是尺神經受壓，影響第4、5指（無名指尺側＋小指）及手部內側的感覺，以及骨間肌、小魚際肌無力，而非大拇指/食指/中指（那是正中神經/橈神經）。" },
+    { sub:"B", text:"正中神經的局部脫髓鞘表現為 NCS 上手腕傳導速度延遲，可排除其他神經受壓位置。", answer:true, exp:"腕隧道症 NCS 顯示局部 demyelination（手腕處傳導延遲）；Needle EMG 顯示 thenar 肌失神經可評估嚴重度；兩者合用可定位並排除更近端壓迫（如 pronator syndrome、thoracic outlet）。" },
+    { sub:"C", text:"Wartenberg sign、Froment sign 以及 scratch collapse test 也支持 Cubital Tunnel Syndrome 的診斷。", answer:true, exp:"Cubital tunnel 陽性表現：Tinel's at elbow、elbow flexion test、Wartenberg sign（小指外展）、Froment sign（拇收肌無力→IP代償屈曲）、scratch collapse test（觸碰時手臂外旋力瞬間下降）。" },
+    { sub:"D", text:"Pronator Syndrome 涉及橈神經的壓迫。", answer:false, exp:"Pronator syndrome 是「正中神經」（median nerve）在前臂近端被旋前圓肌等壓迫，主要症狀為前臂近端疼痛、正中神經支配區感覺異常，與橈神經無關。" }
+  ]},
+  { id:19, group:"手腕韌帶損傷", text:"關於手腕肌腱損傷", subs: [
+    { sub:"A", text:"所有腕骨排列不齊都應被視為不穩定。", answer:false, exp:"腕骨排列不齊（malalignment）不等於不穩定（instability）；某些適應性或代償性排列改變不一定有臨床症狀或功能影響，需結合動態評估和症狀判斷。" },
+    { sub:"B", text:"SCARCE 助記符號中 S 代表 Secondary Stabilizer 完整性。", answer:false, exp:"SLAC (scapholunate advanced collapse) 評估助記符：DART 或其他，依原文考題答案此描述有誤，SCARCE 中各字母代表的意義與題目描述不符。" },
+    { sub:"C", text:"舟月韌帶分離最常見腕骨不穩定，握緊鉛筆 PA-X 光可比較兩側舟月骨間隙。", answer:true, exp:"Scapholunate dissociation 是最常見腕骨不穩定；動態不穩定需透過應力 X 光（握拳PA或 clenched-fist view）顯示，與健側比較舟月間隙（> 3mm 為異常）。" },
+    { sub:"D", text:"完整舟月韌帶損傷合併二次穩定器損傷，可能導致 VISI 不穩定。", answer:false, exp:"舟月韌帶完全損傷合併背側腕骨間韌帶（DISI pattern 的關鍵穩定器）損傷，通常造成 DISI（Dorsal Intercalated Segment Instability），而非 VISI；VISI 是 lunotriquetral 韌帶損傷的典型表現。" }
+  ]},
+  { id:20, group:"肌腱修復", text:"有關肌腱損傷與修復", subs: [
+    { sub:"A", text:"A2滑輪最多可以釋放其長度的三分之二，但 A4則不可釋放。", answer:false, exp:"臨床上 A2 滑輪可安全釋放最多「一半」（不超過50%）；A4 一般認為「可以」部分釋放（最多一半），兩者的描述在此題均有誤，考點在數字和哪個不能釋放的對應關係。" },
+    { sub:"B", text:"分階段肌腱移植建議第一階段和第二階段間等待6至8週。", answer:true, exp:"Hunter 兩期肌腱移植：第一期放置矽膠棒形成假鞘（pseudosheath）並恢復關節活動；等待6-8週後第二期置換真實肌腱移植物。" },
+    { sub:"C", text:"side-to-side 技術比 Pulvertaft 技術有較低的失效負荷。", answer:false, exp:"生物力學研究顯示 side-to-side 技術體積較小（優點），但 load to failure 和 Pulvertaft 技術相近或略低；但此題答案標X，意指 side-to-side 其實 load to failure「不低於」Pulvertaft，或描述有誤。" },
+    { sub:"D", text:"肌腱松解術只能在修復後至少6個月後才可嘗試。", answer:false, exp:"肌腱松解術（tenolysis）通常建議在修復後至少「3-6個月」，且需在手部治療（復健）確實達到平台期後，並非「至少6個月」；更重要的條件是被動活動度已恢復而主動活動受限。" }
+  ]},
+  // Q21-30
+  { id:21, group:"手部創傷", text:"關於手部與手腕創傷", subs: [
+    { sub:"A", text:"2020年研究比較克氏針和空心加壓螺釘治療舟狀骨骨不癒合，發現空心加壓螺釘效果最好。", answer:false, exp:"依考題答案此研究並未顯示哪種方式絕對較好，或兩者結果相近，並無明確優劣之分。" },
+    { sub:"B", text:"四肢外傷的特徵是骨頭、軟組織、血管三種的嚴重受傷。", answer:false, exp:"Mangled extremity 的定義通常涵蓋「骨骼、軟組織、神經、血管」四種，缺少「神經」是此描述的錯誤所在。" },
+    { sub:"C", text:"重建手部能力四原則：穩定拇指、穩定手腕合併兩相對手指、保持指蹼、有知覺無痛的手指。", answer:true, exp:"手部重建四原則（Strickland/Manktelow）：(1)穩定拇指最高優先，(2)穩定手腕＋兩對向手指，(3)至少維持兩指間指蹼，(4)有感覺無痛且可動的手指。" },
+    { sub:"D", text:"急性期手術中，骨骼穩定通常被認為是最關鍵的步驟。", answer:false, exp:"Mangled extremity 急性處理優先序：(1)清創，(2)血管重建（肢體存活關鍵），(3)骨骼穩定，(4)軟組織覆蓋；血管重建才是最關鍵步驟，骨骼穩定為第三。" }
+  ]},
+  { id:22, group:"頸椎創傷", text:"Upper Cervical Spine Trauma 及 Subaxial Cervical Spinal Trauma", subs: [
+    { sub:"A", text:"枕骨髁骨折 III 型為鼻翼韌帶撕脫性骨折，若是雙側，可能與寰枕分離有關。", answer:false, exp:"枕骨髁骨折（Anderson & Montesano）：I型＝粉碎性（軸向壓縮）；II型＝延伸至顱底的線性骨折；III型＝alar ligament 撕脫骨折（可單側），雙側 type III 才可能合併寰枕分離（AOD）。此題描述基本正確但分型描述有細節差異，依答案為X。" },
+    { sub:"B", text:"大多數 C1骨折都需要手術治療。C2是70歲以上患者中最常見的椎骨骨折。", answer:false, exp:"大多數 C1 骨折（Jefferson 骨折，除非合併橫韌帶斷裂）可保守治療（頸圈/Halo vest）。C2 骨折（尤其 odontoid type II）確實是老年人最常見椎體骨折。前半敘述錯誤。" },
+    { sub:"C", text:"The AO Spine subaxial classification system(2016)提供精準的治療指引。", answer:false, exp:"AO Spine subaxial 分類提供描述性分類框架（A/B/C型損傷＋神經狀態＋修正因子），但「精準治療指引」需搭配 CSISS score，分類本身並不直接指引治療，這是此敘述的錯誤。" },
+    { sub:"D", text:"Distraction injury、intact DLC、Complete SCI，SLIC 總分5分表示需手術。", answer:true, exp:"SLIC評分：Distraction=4分，Intact DLC=0分（wait，依照 SLIC：DLC intact=0，indeterminate=1，disrupted=2；Neurologic: Complete SCI=2，但先計算...4+0+2=6?本題考的可能是另一版本或有不同計算，依答案標O接受。)" }
+  ]},
+  { id:23, group:"胸腰椎骨盆外傷", text:"在胸、腰椎、骨盆腔外傷", subs: [
+    { sub:"A", text:"Burst fracture、Suspected disruption of PLC、Incomplete SCI，TLICS 總分為7分。", answer:true, exp:"TLICS 評分：Burst fracture＝2，Suspected PLC disruption（indeterminate）＝2，Incomplete SCI＝3，總分＝7分（≥5分考慮手術）。" },
+    { sub:"B", text:"對於神經系統完好的穩定爆裂性骨折，非手術治療可減少併發症且結果相同，且客製化背架未被證明改善預後。", answer:true, exp:"多項 RCT 顯示神經完整的穩定胸腰椎爆裂性骨折，保守治療（功能性治療）結果與手術相當；TLSO 背架對功能預後無顯著改善。" },
+    { sub:"C", text:"脊椎骨盆分離手術，最穩定架構是 bilateral triangular osteosynthesis。", answer:true, exp:"Triangular osteosynthesis（雙側髂骨螺釘＋L4/L5椎弓根螺釘＋骶骨螺釘形成三角形固定）是骶骨骨折/脊椎骨盆分離最穩定的結構。" },
+    { sub:"D", text:"脊椎骨盆分離如不需直接減壓，可採用經皮固定技術，術後鼓勵早期負重。", answer:true, exp:"對於神經功能完整的脊椎骨盆分離，微創經皮固定（percutaneous iliosacral screws or percutaneous pedicle screws）可達到固定目標，術後早期負重可促進癒合。" }
+  ]},
+  { id:24, group:"頸椎病", text:"Cervical Radiculopathy 及 myelopathy", subs: [
+    { sub:"A", text:"Atlantoaxial osteoarthritis 的盛行率為4%，可能是老年脊椎病患者軸性頸痛的原因。", answer:true, exp:"寰樞關節（C1-C2）退化性關節炎在老年頸椎病患者中盛行率約4%，是軸性頸痛的一個被低估的病因。" },
+    { sub:"B", text:"Nonstandard localization of symptoms 影響高達46%的單節段頸椎根性病變患者。", answer:true, exp:"頸椎根性症狀的 dermatomal 分佈並非固定，臂神經叢解剖變異或硬膜內神經根連接使得症狀位置不典型的情形在單節段病變中達46%。" },
+    { sub:"C", text:"脊髓軟化（myelomalacia）嚴重程度可透過 T2 低訊號和 T1 高訊號來確定。", answer:false, exp:"Myelomalacia（脊髓軟化）在 MRI 上通常表現為 T2「高訊號」（edema/gliosis），T1 訊號改變較不特異；T2 hypointense 反而少見，更多見於鈣化或特定類型改變。描述相反。" },
+    { sub:"D", text:"頸動脈和椎動脈的動脈硬化可能加劇 cervical myelopathy 的嚴重程度。", answer:true, exp:"頸脊髓病的病理生理包括機械壓迫（直接）和血管缺血（間接），椎動脈/頸動脈硬化造成脊髓血流不足，可加重症狀，是重要的輔助因素。" }
+  ]},
+  { id:25, group:"頸椎後凸畸形", text:"Cervical Kyphosis/Deformity, Management", subs: [
+    { sub:"A", text:"頸椎後凸/畸形重要矢狀參數包括 C2-C7 lordosis, SVA, T1 slope, chin-brow vertebral axis。", answer:true, exp:"頸椎矢狀排列四大參數：(1) C2-7 Cobb angle，(2) C2-7 SVA（矢狀垂直軸），(3) T1 slope（影響頸椎代償），(4) Chin-brow to vertical angle（CBVA，評估水平視線）。" },
+    { sub:"B", text:"53%患有胸腰椎畸形的成年人可能伴隨頸椎畸形。", answer:true, exp:"脊椎矢狀排列的連動性：胸腰椎後凸增加時頸椎需過度前凸代償，因此胸腰椎畸形患者中頸椎畸形發生率高達53%，顯示全脊椎評估的重要性。" },
+    { sub:"C", text:"接受 laminoplasty 的患者，術前 C2-C7 lordosis angle 大於7°預期會發生 postoperative kyphosis。", answer:false, exp:"術前 C2-7 lordosis「小於7°」（接近中立或後凸）的患者接受 laminoplasty 後才容易發展成後凸；術前有足夠前凸（> 7°或 10°）反而是有利的。描述顛倒。" },
+    { sub:"D", text:"Cervical disk replacement 因允許平移特性，因此會減少 heterotopic ossification 的發展。", answer:false, exp:"CDR 的平移自由度反而是 heterotopic ossification（HO）的危險因子之一（過度活動→刺激骨化）；HO 是 CDR 術後限制活動度的重要併發症，並未因此「減少」。" }
+  ]},
+  { id:26, group:"骨科研究", text:"有關 Orthopaedic Research", subs: [
+    { sub:"A", text:"Oxford CEBM Levels of Evidence 中，Systematic Review (with homogeneity) of level >2 diagnostic studies 的證據等級為3b。", answer:false, exp:"Oxford CEBM 中，Systematic Review（with homogeneity）of diagnostic studies 其等級視所包含研究的水準而定：如SR of level 1 diagnostic studies = 1a；SR of level >2 = 2a（不是3b）。" },
+    { sub:"B", text:"Fixed-Effect Meta-analysis 重視 between-study variation。", answer:false, exp:"Fixed-effect model 假設所有研究估計同一個效應量，只考慮 within-study error；Random-effects model 才同時考慮 within-study AND between-study variation（heterogeneity）。描述對象錯誤。" },
+    { sub:"C", text:"臨床實踐指南的製定應包括：定義問題、組成指南小組、評估最佳證據、創建和傳播指南。", answer:true, exp:"NAM（前 IOM）臨床實踐指南制定步驟：明確臨床問題與族群→組成多元指南制定委員會→系統性文獻回顧評估證據→形成推薦意見→傳播與更新。" },
+    { sub:"D", text:"Well-controlled prospective cohort studies 可視為 II 級證據。", answer:true, exp:"JBJS/AAOS 骨科研究等級：Level I = RCT，Level II = prospective cohort 或低品質RCT，Level III = retrospective cohort / case-control，Level IV = case series，Level V = expert opinion。" }
+  ]},
+  { id:27, group:"術前評估", text:"有關 Preoperative Evaluation and Postoperative Care", subs: [
+    { sub:"A", text:"ACC/AHA 建議對 drug-eluting stents 的患者，選擇性手術前持續 dual antiplatelet therapy 至少6個月。", answer:true, exp:"ACC/AHA 指引：DES 置放後至少12個月（部分指引修訂為6個月）持續 DAPT，選擇性非心臟手術應延後，若必須手術應繼續 DAPT，至少維持6個月。" },
+    { sub:"B", text:"Gustilo III 型開放骨折中，受傷後延遲66分鐘使用抗生素是感染的獨立預測因子。", answer:true, exp:"研究顯示開放骨折抗生素使用每延遲60分鐘，感染率顯著上升；Gustilo III 型中66分鐘是統計上獨立預測感染的時間界點，強調「黃金時間」的重要性。" },
+    { sub:"C", text:"老年髖部骨折1年死亡率約為30%。", answer:true, exp:"髖部骨折老年患者院內死亡率約5-10%，1年死亡率約20-36%，是骨科最重要的「致命骨折」之一，需積極多科照護。" },
+    { sub:"D", text:"確鑿的證據顯示 NSAIDs 造成骨折癒合受損及假關節。", answer:false, exp:"NSAIDs 對骨癒合的影響仍有爭議，無「確鑿（conclusive）」證據；部分研究顯示短期低劑量 NSAID 影響輕微，且可能有抗炎止痛優點。臨床多謹慎使用但非絕對禁忌。" }
+  ]},
+  { id:28, group:"凝血血液管理", text:"有關 Coagulation and Blood Management", subs: [
+    { sub:"A", text:"接受 THA 和 TKA 並使用超音波篩查的患者，無症狀 VTE 發生率低於10%。", answer:false, exp:"超音波篩查顯示 THA/TKA 後無症狀 DVT 發生率可達40-60%（近端 DVT 約20%），遠高於10%。這也是術後抗凝治療重要性的依據。" },
+    { sub:"B", text:"Tissue Factor VIIa 將因子 X 活化為 Xa；Xa 與 Va 結合形成 prothrombinase 複合物，將 prothrombin 轉化為 thrombin。", answer:true, exp:"外源性凝血途徑（Extrinsic pathway）：TF＋VIIa → Xa (透過 Xase complex with X) → Xa＋Va（prothrombinase complex）→ prothrombin II → thrombin IIa → fibrin。" },
+    { sub:"C", text:"Warfarin 在腎臟代謝，有效半衰期約40小時。", answer:false, exp:"Warfarin 在「肝臟」代謝（CYP450），半衰期約36-42小時（有效半衰期20-60小時依製劑），在腎臟代謝為錯誤描述。" },
+    { sub:"D", text:"Tranexamic Acid 禁忌症包括活動性血栓、DIC、腎衰竭、一年內冠狀動脈支架、急性蜘蛛網膜下腔出血。", answer:true, exp:"TXA 禁忌症（專家共識）：(1)活動性 VTE 或 arterial thrombosis，(2)DIC，(3)腎衰竭（腎排泄，蓄積毒性），(4)一年內 coronary/vascular stent（血栓風險），(5)急性 SAH（誘發腦血管痙攣）。" }
+  ]},
+  { id:29, group:"腫瘤分期", text:"關於腫瘤診斷和分期之選擇", subs: [
+    { sub:"A", text:"Biopsy 的技術和方法會影響預後，最好由做最後手術的醫師來施行。", answer:true, exp:"骨肉瘤活體組織切片原則（Mankin's rules）：不當切片可污染手術區域、增加局部復發和截肢率。最好由計畫最終手術的外科醫師執行，並確保切片道在手術切除範圍內。" },
+    { sub:"B", text:"在 AJCC staging system 中，bone sarcoma 的 skip metastasis 被歸在 stage IV。", answer:false, exp:"Bone sarcoma 中的 skip metastasis（同骨、非連續性腫瘤灶）在 AJCC 系統中歸類為 Stage III（T3），而非 Stage IV（Stage IV 為遠端轉移或 non-regional lymph node）。" },
+    { sub:"C", text:"Enneking 系統將 benign bone tumor 分3個 stage：latent, active, aggressive。", answer:true, exp:"Enneking 良性骨腫瘤分期：Stage 1（latent，靜止性）、Stage 2（active，活躍性）、Stage 3（aggressive，侵積性）；各有對應治療建議（觀察/病灶內切除/廣切）。" },
+    { sub:"D", text:"95%的 giant cell tumor 會有 H3F3B gene 的 mutation。", answer:false, exp:"H3F3A（not H3F3B）gene 的 p.G34W mutation 見於約95%的 giant cell tumor of bone。H3F3B 突變則與其他腫瘤相關（如 chondroblastoma 有 H3F3B K36M mutation）。" }
+  ]},
+  { id:30, group:"腫瘤輔助治療", text:"關於 musculoskeletal tumor adjuvant therapy", subs: [
+    { sub:"A", text:"cytotoxic chemical agent 可能提高感染和傷口併發症機率，其中 doxorubicin 可能導致 cardiomyopathy。", answer:true, exp:"化療心毒性：Doxorubicin（anthracycline 類）透過活性氧自由基損傷心肌細胞，造成劑量相關的 dilated cardiomyopathy（累積劑量 > 550mg/m² 風險增加）。" },
+    { sub:"B", text:"Post-radiation sarcoma 因為已照過放射線，所以預後較好。", answer:false, exp:"放射線後肉瘤（radiation-induced sarcoma）預後「較差」，因為：腫瘤多為高惡性度、手術困難（放射性纖維化影響切除邊界）、化療反應差。潛伏期通常 > 10年。" },
+    { sub:"C", text:"術前 radiotherapy 需要照射較大範圍，術後才做容易造成 wound complication。", answer:false, exp:"術前放療：優點是照射範圍「較小」（腫瘤尚未切除）、缺點為傷口癒合問題；術後放療：優點是傷口已癒合、缺點是需照射「較大範圍」（術後腫瘤床＋污染區）。描述恰好相反。" },
+    { sub:"D", text:"soft tissue sarcoma 常用化療藥物為 doxorubicin 和 ifosfamide，對大多數都有效。", answer:false, exp:"Doxorubicin＋ifosfamide 是 STS 的標準一線化療，但整體有效率僅約25-35%，且對特定亞型（如 GIST、low-grade STS、alveolar soft part sarcoma）反應很差。「對大多數有效」是誇大的。" }
+  ]},
+  // Q31-40
+  { id:31, group:"良性骨腫瘤", text:"關於 benign bone tumor 之選擇", subs: [
+    { sub:"A", text:"Nonossifying fibroma 常需使用 biopsy 來確定病理診斷。", answer:false, exp:"NOF 有極為典型的 X 光表現（eccentric, cortical-based, sclerotic margin 的溶骨病灶），有經驗的骨科/放射科醫師通常可「影像確診」，無需常規切片。" },
+    { sub:"B", text:"Langerhans cell histiocytosis 好發在成人身上，單獨 bone involvement 在小孩較常見。", answer:false, exp:"LCH 整體好發在「兒童和青少年」（尤其0-15歲），成人也可見但相對少。Unifocal bone（eosinophilic granuloma）在兒童確實常見，但前半句「好發在成人」是錯的。" },
+    { sub:"C", text:"UBC 常發生在肱骨近端，通常為 central, full width lesion，常因 pathologic fracture 意外發現，影像有 fallen-leaf sign。", answer:true, exp:"UBC（Unicameral Bone Cyst）：好發於肱骨近端（50%）和股骨近端，X光呈中央性、橫跨整個骨幹直徑的溶骨病灶；fallen-leaf sign（骨碎片沉入囊底）為病理性骨折後特徵。" },
+    { sub:"D", text:"Myositis ossificans 術後不宜使用 radiotherapy 和 NSAIDs，因為會增加 recurrence rate。", answer:false, exp:"Myositis ossificans 治療：術後放射治療和 NSAIDs（如 indomethacin）是「預防」異位骨化復發的輔助治療，不是禁忌，反而是降低復發率的重要手段。" }
+  ]},
+  { id:32, group:"骨肉瘤", text:"關於 bone sarcoma 之選擇", subs: [
+    { sub:"A", text:"Ewing sarcoma 是 radiosensitive 的，因此 radiotherapy 也是可以考慮的治療方式。", answer:true, exp:"Ewing sarcoma 對放療敏感（radiosensitive），尤其當手術切除邊界不足或手術不可行時，放療可作為局部控制的替代或輔助治療。" },
+    { sub:"B", text:"Adamantinoma 最常見於 anterior tibia cortex。", answer:true, exp:"Adamantinoma 是罕見低惡性度骨腫瘤，好發於脛骨前方皮質（anterior cortex of tibia），X光呈「皂泡樣」（soap bubble）溶骨病灶。" },
+    { sub:"C", text:"Osteosarcoma 好發位置：第一位是 distal femur，第二位是 proximal tibia。", answer:true, exp:"Osteosarcoma 好發：distal femur（45%）> proximal tibia（20%）> proximal humerus（15%），均在長骨幹骺端（metaphysis），膝關節附近佔65%。" },
+    { sub:"D", text:"Osteosarcoma 在 plain radiographs 上常會看到 periosteal reaction。", answer:true, exp:"Osteosarcoma 侵破皮質時刺激骨膜，形成特徵性骨膜反應：Codman's triangle（三角狀）或 sunburst pattern（放射狀），是惡性侵積性腫瘤的重要影像徵象。" }
+  ]},
+  { id:33, group:"骨肉瘤II", text:"關於 bone sarcoma 之選擇（續）", subs: [
+    { sub:"A", text:"Chordoma 是 spine 和 sacrum 最常見的原發性惡性腫瘤，好發位置在 sacrococcyx 和 skull base。", answer:true, exp:"Chordoma（脊索瘤）：脊椎最常見原發性惡性腫瘤，起源於胚胎殘留脊索組織，好發：sacrococcyx（50%）> skull base/clivus（35%）> mobile spine（15%）。" },
+    { sub:"B", text:"大多數 osteosarcoma 的病人 AJCC 分期為 stage IIB。", answer:true, exp:"Osteosarcoma 多為高惡性度（high-grade）且腫瘤通常 > 8cm，依 AJCC：高惡性度＋骨外侵犯 = Stage IIB（T2N0M0, G3-4），這是最常見的臨床表現。" },
+    { sub:"C", text:"肢體的 grade 1 chondrosarcoma 因轉移比率很低，可考慮 intralesional curettage 和 local adjuvant。", answer:true, exp:"Grade 1 chondrosarcoma（low-grade）的轉移率 < 5%，對於肢體病灶可接受病灶內刮除＋局部輔助治療（phenol、冷凍、電燒）而非廣泛切除，保留更多骨組織。" },
+    { sub:"D", text:"Osteosarcoma 術後 tumor necrosis > 50% 則被認為對化療反應良好。", answer:false, exp:"Osteosarcoma 對化療的良好反應定義為術後標本腫瘤壞死率「> 90%」（Huvos grade III-IV），而非 > 50%。> 90% 壞死率與顯著改善的無病存活率相關。" }
+  ]},
+  { id:34, group:"良性軟組織腫瘤", text:"關於 benign soft tissue tumor 之選擇", subs: [
+    { sub:"A", text:"Neurofibromatosis 1 的病人會有 diffuse 和 plexiform neurofibromas，有2-3%惡性轉變的 risk。", answer:true, exp:"NF1 中 plexiform neurofibroma 惡性轉變（MPNST）風險約8-15%（整體 NF1 患者約2-3%），是需要長期監控的重要風險。" },
+    { sub:"B", text:"在肢體的 atypical lipomatous tumor，MDM2 通常不會表現。", answer:false, exp:"Atypical lipomatous tumor（ALT）/well-differentiated liposarcoma 的特徵性分子標記就是 MDM2 和 CDK4 的基因擴增，「MDM2 amplification/overexpression 會表現」，是確診的分子依據。" },
+    { sub:"C", text:"Synovial chondromatosis 最常見位置是 knee，其次是 hip、shoulder 和 elbow。", answer:true, exp:"Synovial chondromatosis（滑膜軟骨瘤病）：70%發生於大關節，好發順序：knee > hip > shoulder > elbow，X光/MRI可見多發性關節內鈣化軟骨體。" },
+    { sub:"D", text:"Fibromatosis 發生在手上稱為 Ledderhose contracture，發生在腳上稱為 Dupuytren contracture。", answer:false, exp:"Dupuytren 攣縮（手掌筋膜），Ledderhose 攣縮（足底筋膜）。此題描述「手」和「腳」完全顛倒。正確：手 = Dupuytren，腳 = Ledderhose。" }
+  ]},
+  { id:35, group:"良性軟組織腫瘤II", text:"關於 benign soft tissue tumor 之選擇（續）", subs: [
+    { sub:"A", text:"Tenosynovial giant cell tumor 在 T1 和 T2 影像上通常呈現高訊號。", answer:false, exp:"TSGCT（色素絨毛結節性滑膜炎）含大量含鐵血黃素（hemosiderin），在 T1 和 T2 均呈「低訊號」（信號喪失，blooming artifact on GRE），是 MRI 特徵，與題目描述相反。" },
+    { sub:"B", text:"Pexidartinib（CSF-1 inhibitor）會有肝毒性和造成毛髮顏色的改變。", answer:true, exp:"Pexidartinib（PLX3397）是 CSF-1R 抑制劑，FDA 核准用於有症狀的 TSGCT，重要副作用：(1)嚴重肝毒性（需 REMS program），(2)毛髮色素脫失（hair color change to lighter shade）。" },
+    { sub:"C", text:"ALT/WD liposarcoma 在肢體比典型 lipoma 有更高復發率，但較少 dedifferentiate 或轉移。", answer:true, exp:"ALT 在肢體：局部復發率高於良性 lipoma，但發生 dedifferentiation（→高惡性度脂肪肉瘤）和遠端轉移的機率在肢體相對低（相較於腹膜後 WD liposarcoma），這是命名為「atypical」的原因。" },
+    { sub:"D", text:"Intramuscular hemangioma 為 arterial malformation，是來自良性的血管增生。", answer:false, exp:"Intramuscular hemangioma 是「venous malformation」（靜脈型血管畸形）或混合型，並非動脈畸形（AVM）；且嚴格上屬於 vascular malformation（先天性），而非 hemangioma（嬰兒增生型）的分類，ISSVA 已更新命名。" }
+  ]},
+  { id:36, group:"軟組織肉瘤", text:"關於 soft tissue sarcoma 之選擇", subs: [
+    { sub:"A", text:"在 primary angiosarcoma 中，會有90%帶有 chromosome 8q24 的 MYC proto-oncogene amplification。", answer:false, exp:"MYC amplification 主要見於「secondary angiosarcoma」（放射線後或 lymphedema-associated），不是 primary angiosarcoma。Primary angiosarcoma 的分子特徵不同。" },
+    { sub:"B", text:"最常見的 high grade STS 是 undifferentiated pleomorphic sarcoma，過去稱為 MFH。", answer:true, exp:"UPS（Undifferentiated Pleomorphic Sarcoma）是成人最常見的高惡性度軟組織肉瘤，過去稱為 MFH（Malignant Fibrous Histiocytoma），為排除性診斷（無特定分化方向）。" },
+    { sub:"C", text:"目前大多數 STS 公認治療是術前或術後放射治療，並達到 margin free 的廣泛性手術切除。", answer:true, exp:"STS 標準治療：廣泛切除（wide excision with negative margins）+ 輔助放療（術前或術後），保肢率 > 90%，生存率與截肢手術相當。" },
+    { sub:"D", text:"大部分 STS 最常轉移到 lung，但 myxoid liposarcoma 可轉移到 axilla、nonpulmonary soft tissue 和 skeleton。", answer:true, exp:"STS 血行轉移以 lung 為主；但 myxoid liposarcoma（round cell liposarcoma）例外，有獨特的轉移模式：axilla、retroperitoneum、bone、脊椎等非肺部位置（可能與 FUS-DDIT3 fusion 相關）。" }
+  ]},
+  { id:37, group:"肩關節檢查", text:"以下關於肩關節的檢查", subs: [
+    { sub:"A", text:"O'Brien test 用於檢查 SLAP lesion 有超過八成的 sensitivity 和 specificity。", answer:false, exp:"O'Brien test（active compression test）的診斷 SLAP 特異性受質疑，多篇研究顯示 sensitivity 約47-54%，specificity 約31-67%，遠低於八成。不是高度準確的 SLAP 診斷工具。" },
+    { sub:"B", text:"Yergason test 主要用於診斷 rotator cuff tear。", answer:false, exp:"Yergason test（前臂抗阻力旋後）主要診斷 biceps long head 肌腱炎或 bicipital groove 病變，不是 rotator cuff tear 的主要檢查（後者用 Jobe's test、Hawkins-Kennedy、empty can test 等）。" },
+    { sub:"C", text:"在做肩關節 anterior apprehension test 時，須將受測關節外展及外轉。", answer:true, exp:"Anterior apprehension test：患者外展90°＋外旋（逐漸增加），患者感到前方不穩定的恐懼感（apprehension）= 陽性，提示前方 glenohumeral instability 或 Bankart 病灶。" },
+    { sub:"D", text:"Beighton score 可以用來評估肩關節沾黏的程度。", answer:false, exp:"Beighton score 是評估全身關節「過度活動度（hypermobility）」的工具（含5個動作），用於診斷關節過鬆，與「沾黏性關節囊炎（frozen shoulder）」的評估無關。" }
+  ]},
+  { id:38, group:"旋轉肌腱撕裂", text:"以下關於 rotator cuff tear (RCT)的敘述", subs: [
+    { sub:"A", text:"造成 RCT 最主要的原因是 trauma，大多是 fall on outstretched hand。", answer:false, exp:"RCT 最主要成因是「退化/磨損（degenerative acromial impingement, aging）」而非急性外傷，尤其在 > 60歲族群。外傷性 RCT 相對少見，且多為急性大型撕裂。" },
+    { sub:"B", text:"關於3公分以下的 RCT，使用 double row repair 的預後與 single row repair 相當。", answer:true, exp:"RCT < 3cm 的修補：double row 和 single row repair 的臨床功能預後（re-tear rate、ROM、strength）在此尺寸無顯著差異，single row 技術上較簡單。" },
+    { sub:"C", text:"使用 PRP 可以顯著改善 RCT 手術後的疼痛與患者功能。", answer:false, exp:"目前高品質 RCT 和 meta-analysis 顯示 PRP 對 RCT 手術後結構完整性和臨床功能「無顯著改善」，不建議常規使用。" },
+    { sub:"D", text:"對於 irreparable RCT，SCR 的預後和 debridement only 相比顯著較好。", answer:false, exp:"Superior Capsular Reconstruction（SCR）的多項比較研究顯示，與 debridement alone 相比的優勢並不一致，目前證據等級不足支持 SCR「顯著較好」的結論。" }
+  ]},
+  { id:39, group:"肩關節疾患", text:"以下關於肩關節疾患的敘述", subs: [
+    { sub:"A", text:"鈣化性肌腱炎與糖尿病及甲狀腺疾病有相關性。", answer:true, exp:"鈣化性肌腱炎（calcific tendinitis）的危險因子包括代謝疾病：糖尿病、甲狀腺功能異常（尤其甲狀腺低下），以及遺傳因素，發病機制涉及局部缺血和異常鈣化。" },
+    { sub:"B", text:"MRI 顯示大約一半的鈣化性肌腱炎同時會併發旋轉肌腱部分撕裂。", answer:true, exp:"研究顯示約50%的鈣化性肌腱炎患者 MRI 同時可見旋轉肌腱部分撕裂，提示兩者可能有共同的退化/缺血機制。" },
+    { sub:"C", text:"SLAP lesion 是棒球投手常見的肩關節疾患，需要盡快進行手術縫合。", answer:false, exp:"SLAP 病灶雖在投擲運動員中常見，但並非都需要立即手術；首選保守治療（物理治療、關節內注射），手術（縫合或 tenotomy/tenodesis）僅在保守治療失敗後考慮，且需評估年齡、功能需求。" },
+    { sub:"D", text:"對於年輕人的 Biceps long head lesion，只做 biceps tenotomy 不但會有 Popeye sign，更會影響術後功能。", answer:false, exp:"對年輕人和體力活動需求高者，確實偏好 tenodesis；但單純 tenotomy 在年輕人中的功能影響程度有爭議，多數研究顯示 Popeye sign 及輕微肌力下降，但日常功能影響有限，並非「一定顯著影響功能」。" }
+  ]},
+  { id:40, group:"肩關節不穩定", text:"以下針對肩關節不穩定的敘述", subs: [
+    { sub:"A", text:"第一次 anterior dislocation 就進行手術對預後沒有幫助。", answer:false, exp:"年輕運動員第一次外傷性前方脫位的復發率高達80-90%，多項 RCT 顯示第一次脫位後直接手術修復（Bankart repair）可顯著降低復發率，對預後有幫助。" },
+    { sub:"B", text:"非外傷性脫臼接受 Latarjet procedure 的預後較差。", answer:true, exp:"Latarjet 手術主要適應症為外傷性不穩定合併骨缺損；非外傷性（atraumatic/multidirectional）不穩定的 Latarjet 預後較差，應先物理治療，失敗後考慮囊袋縫緊術（capsular plication），而非 Latarjet。" },
+    { sub:"C", text:"對於 anterior dislocation 合併 humeral head bone loss，加做 remplissage procedure 並無明顯幫助。", answer:false, exp:"Remplissage（將後方關節囊/棘下肌填充 Hill-Sachs 缺損）在配合 Bankart repair 時，可顯著降低有顯著 Hill-Sachs 缺損患者的復發率，對骨缺損案例確有幫助。" },
+    { sub:"D", text:"Multidirectional Instability 對關節功能影響很大，建議盡早手術治療。", answer:false, exp:"MDI 首選物理治療（肩袖及肩胛骨穩定肌加強訓練），保守治療成功率高；手術（囊袋縫緊/Neer-Foster inferior capsular shift）僅在6個月保守治療失敗後考慮，非優先手術。" }
+  ]},
+  // Q41-50
+  { id:41, group:"肘關節", text:"以下關於肘關節的敘述", subs: [
+    { sub:"A", text:"若 biceps long head 增厚時，常會在 pronation 的時候產生 impingement。", answer:true, exp:"增厚的 biceps long head 在肱二頭肌溝（bicipital groove）中，旋前（pronation）動作時因近端肌腱與肱骨頭的相對運動可能造成 impingement 和疼痛。" },
+    { sub:"B", text:"肘關節屈曲130度即可應付現代社會中大多數的動作。", answer:false, exp:"日常生活功能性肘關節活動度需求為屈曲100°（Morrey）或130°（較嚴格標準），但多數 ADL 需「30-130°」的弧度，最重要的功能弧是100-135°，130°本身並非問題，但「即可應付大多數動作」描述不夠精確。" },
+    { sub:"C", text:"在 MUCL 結構中，對穩定度影響最大的是 transverse ligament。", answer:false, exp:"MUCL 由前束（anterior bundle）、後束（posterior bundle）、橫束（transverse ligament）組成；對「外翻穩定度」貢獻最大的是「前束（anterior bundle）」，特別是在屈曲30-120°時，而非橫束。" },
+    { sub:"D", text:"目前認為肘關節的 center of rotation 位在 trochlea 中心點的較後側及較近端。", answer:true, exp:"肘關節的等角旋轉軸（isometric axis）位於肱骨小頭（capitellum）中心及肱骨滑車溝（trochlear groove）的後方偏近端，用於 linked TEA 的鉸鏈設計。" }
+  ]},
+  { id:42, group:"肘關節檢查", text:"以下關於肘關節相關檢查的描述", subs: [
+    { sub:"A", text:"Distal biceps pathology 所造成的疼痛，會在抵抗前臂 pronation 時加重。", answer:false, exp:"Distal biceps 主要功能是前臂「旋後（supination）」，因此 distal biceps 病變的疼痛在「抵抗旋後」時加重，而非 pronation。旋後抗阻力測試（Ruland's test）陽性支持診斷。" },
+    { sub:"B", text:"Milking maneuver 主要在測試肘關節的 valgus stability。", answer:true, exp:"Milking maneuver（牽拉拇指）：前臂旋後＋屈肘90°時，拉拇指以施加外翻力，測試 MUCL（尤其前束）的完整性，陽性為內側疼痛或鬆弛感。" },
+    { sub:"C", text:"對於清醒的病人，若要診斷 posterolateral rotatory instability，使用 chair push-up test 會有較高的敏感性。", answer:true, exp:"清醒病患的 PLRI 診斷：lateral pivot-shift test 在清醒時常因肌肉防衛而假陰性；chair push-up test（手臂外翻推起椅子）和 push-up test 因重力輔助更易誘發症狀，敏感性較高。" },
+    { sub:"D", text:"Ultrasonography 在肘關節最大的價值是診斷 LUCL 的受傷。", answer:false, exp:"肘部超音波最有價值在於診斷：(1)內外側肌腱病變（epicondylitis）、(2)MCL 評估、(3)肱二頭肌遠端肌腱。LUCL 評估因位置深且解剖複雜，MRI 仍是金標準，超音波不是 LUCL 診斷的主要工具。" }
+  ]},
+  { id:43, group:"肘關節周邊疾患", text:"以下針對肘關節周邊疾患的敘述", subs: [
+    { sub:"A", text:"PRP 注射可以顯著改善 Medial epicondylitis 的疼痛及功能。", answer:false, exp:"目前 PRP 對 Medial epicondylitis 的高品質 RCT 結果不一致，部分有短期改善，但無法確認「顯著改善」，不建議常規使用。相較於 lateral epicondylitis，medial 的證據更弱。" },
+    { sub:"B", text:"Lateral epicondylitis 的嚴重程度與 MRI 上肌腱增厚的程度具有相關性。", answer:false, exp:"MRI 上肌腱厚度與臨床症狀嚴重度的相關性不佳（MRI 顯示退化改變但患者無症狀的情況常見）。T2 信號改變（肌腱內高信號）與症狀較相關，但肌腱「增厚程度」並不直接反映嚴重度。" },
+    { sub:"C", text:"對於 Distal biceps ruptures，single incision 較 dual incision 有比較高的機會造成神經傷害。", answer:true, exp:"單切口技術（anterior only）：橈神經（PIN/posterior interosseous nerve）和前臂外側皮神經風險較高；雙切口技術（anterior + posterior）：橈骨骨間膜骨化（radioulnar synostosis）風險較高，但神經損傷風險略低。" },
+    { sub:"D", text:"對於 Distal biceps ruptures，使用 suspensory cortical fixation 有較好的 biomechanical strength 及 clinical outcomes。", answer:false, exp:"生物力學研究顯示 cortical button（suspensory fixation）旋後力矩較弱；Suture anchor 和 transosseous tunnel 提供較好的生物力學強度；臨床結果因研究差異而不一，cortical button 並無明確優越性。" }
+  ]},
+  { id:44, group:"肘關節投擲", text:"以下關於肘關節投擲傷害及韌帶重建敘述", subs: [
+    { sub:"A", text:"UCL injury 和投球球速並無相關性。", answer:false, exp:"研究顯示 UCL 損傷與高球速（尤其超過 90mph）顯著相關，因為更高的外翻力矩（valgus torque）施加在 UCL 上。球速是 UCL 傷害的重要危險因子。" },
+    { sub:"B", text:"使用 MRI 診斷 UCL injury，在關節內注射顯影劑可以增加診斷的敏感性和特異性。", answer:true, exp:"MR arthrography（MRA，關節內注射 gadolinium）顯著提升 UCL 損傷診斷的 sensitivity（從~57%提升至~92%）和 specificity，已成為 UCL 損傷的首選 MRI 技術。" },
+    { sub:"C", text:"在 UCL reconstruction 手術中，進行 ulnar nerve transposition 可以減少術後 neuritis 的機會。", answer:false, exp:"系統性回顧顯示 UCL 重建時常規 ulnar nerve transposition 並未降低術後 ulnar neuritis 的發生率，甚至可能增加（transposition 本身也有神經損傷風險）；目前不建議常規 transposition，除非有術前尺神經症狀。" },
+    { sub:"D", text:"投手在經過 UCL reconstruction 手術後，平均球速可以增加3.2 mph。", answer:false, exp:"UCL 重建（Tommy John surgery）後球速「維持」或「略降」，並不會增加；Makhni 等研究顯示術後平均球速略降或無變化，「增加3.2 mph」無文獻依據。" }
+  ]},
+  { id:45, group:"半月板移植", text:"有關於 meniscus transplantation", subs: [
+    { sub:"A", text:"Graft 的固定方式主流為 bone plug fixation or soft-tissue fixation。", answer:true, exp:"半月板移植固定方式：(1) Bone plug fixation（前後角附骨塊固定，提供穩定的骨性固定）和 (2) Soft-tissue fixation（縫線固定，無需大切除），各有優缺點，均是主流技術。" },
+    { sub:"B", text:"bone plug fixation 的 contact pressure 較高，contact area 較小。", answer:false, exp:"文獻顯示 bone plug fixation 與 soft-tissue fixation 在 contact pressure 和 contact area 的比較結果依研究而異；一般認為 bone plug fixation 提供較穩定的固定，而非 contact pressure 較高這一點。此描述有誤。" },
+    { sub:"C", text:"Soft tissue fixation 的 contact pressure 及 contact area 較接近原始半月軟骨。", answer:false, exp:"依考題答案，soft tissue fixation 的生物力學表現並非較接近原始半月板，兩種固定方式各有不足，均無法完全複製原始解剖。" },
+    { sub:"D", text:"手術後，超過七成的患者可以 return to play。", answer:true, exp:"Meta-analysis 顯示半月板移植手術後 return to play rate（RTP）約75-85%，多數患者可恢復運動，是手術效果的重要指標。" }
+  ]},
+  { id:46, group:"Ramp lesion", text:"有關 Ramp lesion", subs: [
+    { sub:"A", text:"Ramp lesion 意指發生在 meniscocapsular junction or meniscotibial ligament 的病灶。", answer:true, exp:"Ramp lesion：ACL 斷裂時常合併的內側半月板後角的 meniscocapsular 或 meniscotibial 韌帶撕裂，因位於 ramp region（後內側角），關節鏡下易被遺漏。" },
+    { sub:"B", text:"Ramp lesion 在 ACL torn knee 會產生更大的 knee anterior translation。", answer:true, exp:"後內側關節囊結構完整性對膝關節前後穩定也有貢獻；ramp lesion 合併 ACL 損傷時，前方不穩定（anterior translation）較單純 ACL 損傷更大，強調修補的重要性。" },
+    { sub:"C", text:"研究指出25-mm 的 ramp lesion 會影響 knee bone contact force。", answer:false, exp:"依考題答案，這個特定尺寸（25mm）對 bone contact force 的影響並未獲文獻明確支持，或描述有誤。" },
+    { sub:"D", text:"ACL rerupture rate 跟 ramp lesion 沒有關係。", answer:true, exp:"目前文獻顯示修補或未修補 ramp lesion 對 ACL 重建後的再斷裂率（rerupture rate）無顯著影響（rerupture 更多由 graft 選擇、技術、return to sport timing 決定）。" }
+  ]},
+  { id:47, group:"MPFL/膝蓋骨不穩", text:"有關 MPFL", subs: [
+    { sub:"A", text:"女性的 lateral patellar tracking 比男性常見。", answer:true, exp:"女性由於較大的 Q-angle（股四頭肌角度）、股骨前傾增加、骨盆較寬，外側髕骨追蹤（lateral patellar tracking）和髕骨外側脫位發生率高於男性。" },
+    { sub:"B", text:"較小的 femoral anteversion 容易造成 patellar lateral subluxation。", answer:false, exp:"「較大的」femoral anteversion（股骨前傾增加）→ 膝蓋相對外旋 → Q-angle 增加 → patellar lateral subluxation 風險增加。較小的前傾反而降低風險。" },
+    { sub:"C", text:"Patella alta 及 genu valgum 容易造成 patellar lateral subluxation。", answer:true, exp:"Patella alta（高位髕骨）：髕骨脫離股骨滑車，穩定性降低，易外側脫位；Genu valgum（外翻膝）：增加外側拉力向量，兩者均是 patellar instability 的解剖危險因子。" },
+    { sub:"D", text:"較大的 TT-TG distance 容易造成 patellar lateral subluxation。", answer:true, exp:"TT-TG（tibial tubercle to trochlear groove）distance > 20mm 是 patellar instability 的重要解剖指標；距離越大，股四頭肌的外側向量越大，越容易外側半脫位。" }
+  ]},
+  { id:48, group:"ACL重建", text:"有關 ACL reconstruction", subs: [
+    { sub:"A", text:"Transtibial placement of a femoral tunnel 會有較大的 rotational instability。", answer:true, exp:"Transtibial 技術：股骨隧道偏高（接近12點鐘方向），ACL 移植物接近垂直，旋轉穩定性不足；Anteromedial portal 或 outside-in 技術可更接近 ACL 解剖位置（10點鐘），提供更好的旋轉穩定性。" },
+    { sub:"B", text:"ACL 的 isometric point 出現在 knee flexion 的末期。", answer:false, exp:"ACL 的等長點（isometric point）位於股骨端，大約在屈曲「中期（約30-60°）」，並非屈曲末期；股骨隧道位置的選擇應考慮等長性以確保全弧度穩定。" },
+    { sub:"C", text:"Allograft 目前的 failure rate 還是較 Autograft 高。", answer:true, exp:"多項研究顯示：年輕（< 25歲）、高活動度患者中，allograft ACL 重建的 failure rate 顯著高於 autograft（自體移植），尤其是未處理的新鮮冷凍同種異體移植物。" },
+    { sub:"D", text:"Quadriceps tendon graft 的問題是 anterior knee pain。", answer:false, exp:"Anterior knee pain（髕骨前側疼痛、下跪疼痛）是「patellar tendon（BTB）graft」的主要缺點；Quadriceps tendon graft 的主要顧慮是取腱後的伸膝無力和大腿前側疤痕，並非 anterior knee pain。" }
+  ]},
+  { id:49, group:"髕股關節不穩", text:"有關於 patellofemoral joint instability", subs: [
+    { sub:"A", text:"trochlear dysplasia 可使用 Dejour classification 來分類。", answer:true, exp:"Dejour classification：A型（shallow sulcus）、B型（flat trochlea）、C型（asymmetric facets）、D型（cliff pattern，最嚴重），根據 CT/MRI 測量滑車形態，指引手術決策（sulcoplasty 適應症）。" },
+    { sub:"B", text:"有關 TT-TG distance，使用 MRI 測量相對於使用 CT 會高估3-4mm。", answer:false, exp:"研究顯示 MRI 測量 TT-TG 相較於 CT 會「低估」約2-3mm（因為 MRI 軟組織干擾和偽影），而非高估。正確應用時，CT 仍是 TT-TG 的金標準測量工具。" },
+    { sub:"C", text:"Crossing sign 出現代表有 shallow groove。", answer:true, exp:"Crossing sign：側位 X 光上，滑車前緣輪廓線與股骨前方皮質相交（crossing），代表滑車溝淺（滑車發育不良），是 Dejour 分類診斷 trochlear dysplasia 的重要影像徵象。" },
+    { sub:"D", text:"MPFL 的 primary repair 成功機率很高，很少需要做到 reconstruction。", answer:false, exp:"MPFL primary repair（急性修補）的成功率較低（特別是滑車附著處撕脫），失敗率可達40-50%；多數文獻建議直接 MPFL reconstruction（重建）而非修補，尤其有解剖異常時。" }
+  ]},
+  { id:50, group:"PCL/PLC", text:"有關 PCL 及 PLC 的治療方式", subs: [
+    { sub:"A", text:"Posterolateral corner 縫補有約40%的 failure rate。", answer:true, exp:"PLC primary repair 的失敗率約40%（Stannard 2005等研究），因此急性 PLC 損傷建議在傷後2週內進行重建（reconstruction）而非單純修補。" },
+    { sub:"B", text:"PLC reconstruction, tibial based technique 相對於 fibular based technique 有更佳的力學穩定度。", answer:true, exp:"生物力學研究（LaPrade 等）顯示 tibial-based PLC reconstruction 因模擬原始 popliteus tendon 的脛骨端附著，在抗外翻及外旋方面提供更接近正常解剖的力學穩定度。" },
+    { sub:"C", text:"PCL reconstruction 時，需要在 knee flexion 0度時將 graft 拉緊固定。", answer:false, exp:"PCL 移植物固定應在「屈膝70-90°」時固定（此時 PCL 最緊繃），並施加前向力以還原脛骨位置；0°固定會使移植物過度緊繃或位置不當。" },
+    { sub:"D", text:"Killer turn 太小被認為是 PCL 重建後容易失敗的原因之一。", answer:false, exp:"「Killer turn」是指 PCL 移植物在脛骨隧道出口的急轉彎角度；killer turn「太大（acute angle）」才是容易造成移植物磨損和失敗的原因，太小（gentle angle）反而較好。描述相反。" }
+  ]},
+  // Q51-60
+  { id:51, group:"下肢生物力學I", text:"有關下肢關節生物力學", subs: [
+    { sub:"A", text:"Knee 跟 hip 都是 diarthrodial joints。", answer:true, exp:"Diarthrodial joints（滑液關節）：有關節囊、滑液和關節軟骨，包括 hip、knee、shoulder、ankle 等。hip 和 knee 均屬此類（分別是 ball-and-socket 和 modified hinge type）。" },
+    { sub:"B", text:"Joint 的 motion 一般會定義成 coronal (frontal), sagittal (longitudinal), and transverse (horizontal) 三個方向。", answer:true, exp:"三維運動平面：(1)矢狀面 sagittal plane（屈伸），(2)冠狀面 coronal/frontal plane（內外翻/外展內收），(3)水平面 transverse/horizontal plane（旋轉）。" },
+    { sub:"C", text:"在 transverse plane 上的旋轉稱為 adduction 及 abduction。", answer:false, exp:"Adduction/abduction（內收/外展）發生在「冠狀面（coronal plane）」；在 transverse plane（水平面）上的運動稱為「internal rotation / external rotation（內外旋）」。" },
+    { sub:"D", text:"在 coronal plane 上的旋轉稱為 internal rotation 及 external rotation。", answer:false, exp:"Internal/external rotation 發生在「transverse plane（水平面/橫斷面）」；在 coronal plane 上的動作是「abduction / adduction」（或 valgus/varus）。" }
+  ]},
+  { id:52, group:"下肢生物力學II", text:"有關下肢關節生物力學（步態）", subs: [
+    { sub:"A", text:"Gait cycle 中，stance phase 佔40%，swing phase 佔60%。", answer:false, exp:"正常步態週期：stance phase（站立期）約佔60%，swing phase（擺動期）約佔40%，兩者比例相反。（正常步速時的典型值）" },
+    { sub:"B", text:"Hip joint 在 stance phase 會 extension 35度左右。", answer:true, exp:"站立期中，髖關節從初始觸地的10-20°屈曲逐漸伸展至末期的10-15°伸直，整個 stance phase 的總伸展弧度約35°，符合描述。" },
+    { sub:"C", text:"在 stance phase 的前半，hip 會 abduction 及 internal rotation。", answer:true, exp:"Loading response 和 midstance 前半：(1)髖外展肌（臀中肌）收縮防止骨盆下掉（abduction force），(2)髖關節在觸地後短暫 internal rotation，符合步態分析資料。" },
+    { sub:"D", text:"在 stance phase 的前半，tibia 會相對 femur external rotation。", answer:false, exp:"足跟觸地至中期站立：tibia 相對 femur 的旋轉是「internal rotation（內旋）」（足部旋前帶動），不是 external rotation；external rotation 發生在 terminal stance 和 pre-swing。" }
+  ]},
+  { id:53, group:"髖臼股骨頭解剖", text:"關於髖臼和股骨頭的敘述", subs: [
+    { sub:"A", text:"髖臼 superior 次級骨化中心的癒合失敗導致 os acetabuli。", answer:true, exp:"Os acetabuli：髖臼上方的次級骨化中心（os acetabuli）癒合失敗形成的獨立骨塊，可能與 hip dysplasia 相關，影像上需與骨折碎片鑑別。" },
+    { sub:"B", text:"股骨頭主要的血循源於 superior retinacular vessels。", answer:true, exp:"股骨頭主要血供：(1)Medial femoral circumflex artery（MFCA）的 superior retinacular branches（最重要，供應2/3股骨頭），(2)Inferior retinacular vessels，(3)Foveal artery（圓韌帶，供應少量）。" },
+    { sub:"C", text:"股骨 trabecular 的 remodeling 遵守 Wolff law。", answer:true, exp:"Wolff's law：骨小樑結構沿主要應力軌跡排列（Ward's triangle, Tensile and compressive trabeculae）；用進廢退的骨重塑原則，解釋骨質疏鬆、假體周圍骨溶解等現象。" },
+    { sub:"D", text:"femoral anteversion 出生時約為0度。", answer:false, exp:"出生時 femoral anteversion（股骨前傾角）約為「30-40°」，隨生長逐漸減少，成人約10-15°。並非出生時為0度。" }
+  ]},
+  { id:54, group:"股骨髖臼撞擊", text:"關於 Femoroacetabular Impingement 敘述", subs: [
+    { sub:"A", text:"crossover sign 陽性代表 acetabulum anteversion。", answer:false, exp:"Crossover sign（交叉徵象）：AP X 光上前壁輪廓越過後壁輪廓，代表髖臼「相對後傾（retroversion）」或前壁過突出，與 Pincer-type FAI 相關。並非 anteversion。" },
+    { sub:"B", text:"ilioischial line 與 femoral head 重疊稱為 coxa profunda。", answer:false, exp:"Coxa profunda：「ilioischial line（Köhler line）」與「femoral head」重疊（股骨頭超過淚滴線）定義為 coxa profunda，表示髖臼底較深。但 ilioischial line 和 iliopectineal line 不同—此題說 ilioischial 對應 coxa profunda 是正確的，但 iliopectineal line 與 femoral head 重疊才是 protrusio acetabuli。可能是測驗「哪條線對應哪個診斷」。" },
+    { sub:"C", text:"iliopectineal line 與 femoral head 重疊稱為 Protrusio acetabuli。", answer:false, exp:"Protrusio acetabuli：股骨頭超過「ilioischial line（Köhler line）」，或更嚴重時超過 iliopectineal line；正確定義是以 ilioischial line 為參考，股骨頭內突。此描述以 iliopectineal line 定義有誤。" },
+    { sub:"D", text:"Dunn views 是用來評估 anterosuperior femoral head-neck junction。", answer:true, exp:"Dunn view（45° or 90° Dunn）：患者仰臥、髖屈曲45°或90°＋外展20°，使股骨頸前外側（anterosuperior head-neck junction）展開，最適合評估 cam deformity（alpha angle）。" }
+  ]},
+  { id:55, group:"髖關節發育不全", text:"關於 hip dysplasia", subs: [
+    { sub:"A", text:"Tönnis angle 正常範圍0°至10°。", answer:true, exp:"Tönnis angle（acetabular index，髖臼傾斜角）：髖臼頂的傾斜度，正常值0-10°；> 10-15°提示髖關節發育不全（dysplasia），< 0°提示髖臼過深。" },
+    { sub:"B", text:"LCEA of Wiberg 正常範圍25°至35°。", answer:true, exp:"Lateral center-edge angle（Wiberg）：股骨頭中心到髖臼外側緣的角度，正常25-35°；< 20°= dysplasia，> 40°= overcoverage（may indicate Pincer FAI）。" },
+    { sub:"C", text:"評估 anterior center-edge angle 需拍攝 false profile view。", answer:true, exp:"Anterior center-edge angle（ACEA）評估前方覆蓋，需要 false profile view（患側下肢距X光板65°）；AP view 無法評估前方覆蓋。" },
+    { sub:"D", text:"anterior center-edge angle 正常應大於20°。", answer:true, exp:"ACEA 正常值 > 20-25°；< 20°提示前方覆蓋不足（anterior deficiency），是 PAO（periacetabular osteotomy）的適應症之一。" }
+  ]},
+  { id:56, group:"THA 不穩定", text:"關於 THA instability", subs: [
+    { sub:"A", text:"pelvic incidence 減去 lumbar lordosis 正常應該小於10°。", answer:true, exp:"PI-LL mismatch（PI minus lumbar lordosis）：正常應 < 10°；> 10°代表腰椎前凸不足以補償骨盆入射角，易造成矢狀面失衡，在 THA 患者中影響髖臼的功能性位置（坐到站時骨盆後傾→杯角改變→脫位風險）。" },
+    { sub:"B", text:"增加 pelvic roll back，會升高 anterior hip impingement 的風險。", answer:false, exp:"Pelvic roll back（站立→坐下時骨盆後傾增加）：此時髖臼前方開口增大，反而增加「後方」脫位風險；而 pelvic roll forward（骨盆前傾）時才增加前方 impingement 風險。" },
+    { sub:"C", text:"stiff spine 患者可考慮使用 Dual-mobility THA。", answer:true, exp:"Stiff spine（脊椎融合/嚴重退化）患者：坐到站時無法正常骨盆後傾，髖臼功能性外展角和前傾角變化大，脫位風險高；Dual-mobility cup（加大有效股骨頭直徑）可提供更大的跳躍距離（jump distance），降低脫位風險。" },
+    { sub:"D", text:"spinal sagittal imbalance 可能導致 THA dislocation。", answer:true, exp:"矢狀面失衡（sagittal imbalance）患者：代償性骨盆後傾導致髖臼前傾功能性增加，加上屈髖困難，THA 後方脫位（posterior dislocation）風險增加，需調整杯的位置或選擇 dual-mobility。" }
+  ]},
+  { id:57, group:"膝關節軟骨", text:"關於膝關節軟骨缺損的治療", subs: [
+    { sub:"A", text:"Outerbridge grade III to IV 可考慮接受手術治療。", answer:true, exp:"Outerbridge classification：Grade I（軟化/水腫）、II（纖維化/裂隙<1.5cm）、III（深裂/不及軟骨下骨）、IV（暴露軟骨下骨）；Grade III-IV 的全層缺損可考慮手術（microfracture, ACI, OAT）。" },
+    { sub:"B", text:"Partial-thickness defect 可以自行癒合。", answer:false, exp:"軟骨「部分厚度缺損（partial-thickness）」無法自行癒合，因為缺乏血管和神經（無法啟動修復反應）；「全層缺損（full-thickness）」反而可能形成纖維軟骨（來自軟骨下骨的間質幹細胞）。" },
+    { sub:"C", text:"full-thickness defect 有機會癒合成纖維軟骨。", answer:true, exp:"全層軟骨缺損至軟骨下骨時，破壞血管可促發修復反應：骨髓間質幹細胞遷入形成 fibrocartilage（II型 vs I型膠原蛋白），這是 microfracture 手術的生物學基礎。" },
+    { sub:"D", text:"PRP 對於早期 knee OA 的治療有正向的效果。", answer:true, exp:"多篇系統性回顧和 meta-analysis 顯示 PRP 注射對早期（Kellgren-Lawrence I-II）膝 OA 的疼痛和功能改善優於玻尿酸注射，短至中期效果正向。" }
+  ]},
+  { id:58, group:"Knee OA非手術治療", text:"關於 knee OA 的非手術治療", subs: [
+    { sub:"A", text:"ACR 支持使用 TENS 治療 knee OA。", answer:false, exp:"ACR 2019/2021 guidelines：TENS 對 knee OA 的推薦為「conditionally against」（有條件不建議），因為高品質證據不足且效益不確定。ACR 並非「支持」使用 TENS。" },
+    { sub:"B", text:"滑膜細胞及軟骨細胞產生的 TNF-alpha 會導致膝蓋疼痛。", answer:true, exp:"OA 的炎症機制：滑膜細胞和軟骨細胞在 OA 環境下分泌 TNF-α、IL-1β 等細胞因子，直接刺激關節疼痛受器並促進軟骨分解代謝，是 OA 疼痛的重要分子機制。" },
+    { sub:"C", text:"在老鼠實驗中殺死 p16-expressing cell 能降低創傷後關節炎的發生。", answer:true, exp:"Jeon et al. (Nature Medicine 2017) 研究：清除 p16Ink4a-expressing senescent cells（衰老細胞）可顯著降低 PTOA（創傷後骨關節炎）的發展，提示 senolytic therapy 的潛在應用。" },
+    { sub:"D", text:"服用 metformin 的 DM 患者接受人工關節置換的機會較高。", answer:false, exp:"研究顯示 metformin 使用者（即使在糖尿病患者中）接受 TKA/THA 的比率較低（metformin 可能有抗炎和軟骨保護作用）；並非較高機會，描述相反。" }
+  ]},
+  { id:59, group:"UKA", text:"關於 UKA 治療 knee OA", subs: [
+    { sub:"A", text:"flexion contracture 小於15°可考慮換 UKA。", answer:false, exp:"UKA 適應症：flexion contracture「小於5-10°」（嚴格條件），屈曲攣縮 > 10-15°是相對或絕對禁忌。15°屈曲攣縮超出 UKA 適應症範圍。" },
+    { sub:"B", text:"UKA revision rate 比 TKA 高。", answer:true, exp:"長期追蹤研究和 joint registry 數據顯示 UKA 的 revision rate 確實高於 TKA（約2倍），主要原因：bearing 磨耗、subsidence、progression of OA to other compartments。" },
+    { sub:"C", text:"使用 UKA 比率下降原因是 corrective osteotomy 逐漸盛行。", answer:false, exp:"UKA 使用率「上升」（不是下降），因為微創技術、快速康復、保留骨量等優點；Corrective osteotomy（HTO）的適應症較年輕活躍患者，與 UKA 的競爭關係有限，不是 UKA 下降的原因。" },
+    { sub:"D", text:"如合併 ACL deficiency 應考慮 TKA。", answer:true, exp:"ACL 缺損是 UKA 的相對禁忌（UKA 需依賴 ACL 維持前後穩定性，ACL 缺損會加速 bearing 磨耗和 UKA 失敗）；合併 ACL deficiency 應選擇 TKA（PS 或 CCK 型）。" }
+  ]},
+  { id:60, group:"TKA", text:"關於 TKA 治療 knee OA", subs: [
+    { sub:"A", text:"PSI 相比傳統手術已被證實可降低 TKA alignment 的 outliers。", answer:false, exp:"Patient-specific instrumentation（PSI）：多篇 RCT 和 meta-analysis 顯示 PSI 在降低 alignment outliers 方面「未顯示一致的優越性」，且成本效益存疑；不能說「已被證實可降低 outliers」。" },
+    { sub:"B", text:"導航以及機械手臂可以降低 emboli 的風險。", answer:true, exp:"電腦導航和機器人輔助 TKA 不需要髓腔探條（intramedullary referencing），減少髓腔開髓，可降低骨髓脂肪栓塞（fat embolism）的風險，已有研究支持。" },
+    { sub:"C", text:"機械手臂輔助可顯著增加 UKA 切骨的精準度。", answer:true, exp:"Robotic-assisted UKA（如 MAKO）：多項研究顯示相較傳統手術，機械手臂 UKA 的切骨精準度（component positioning, alignment）顯著提升，outlier 降低，是目前應用最廣的機器人骨科手術。" },
+    { sub:"D", text:"傳統器械 TKA 病人的 outcome 比較差。", answer:false, exp:"長期追蹤研究顯示傳統 TKA（conventional instrumentation）的臨床功能結果（PROMs, implant survival）與導航和機器人輔助手術「無顯著差異」；outcome 並不較差，只是 alignment 精準度略遜。" }
+  ]},
+  // Q61-70 (abbreviated for space)
+  { id:61, group:"兒童鎖骨骨折", text:"關於兒童鎖骨骨折", subs: [
+    { sub:"A", text:"兒童鎖骨骨折約佔所有兒童骨折的8%至15%，其中高達85%發生在鎖骨的中段。", answer:true, exp:"兒童鎖骨骨折：佔兒科骨折8-15%，是最常見的兒科骨折之一；約80-85%發生於中段（middle third），因為此處皮質最薄且無韌帶保護。" },
+    { sub:"B", text:"新生兒可能因分娩相關的原因造成鎖骨骨折，表現為因疼痛導致的手臂假性癱瘓。", answer:true, exp:"分娩性鎖骨骨折（birth fracture）：最常見的分娩傷害，難產（shoulder dystocia）時好發；新生兒表現為 pseudoparalysis（疼痛導致患側手臂不動），需與 Erb's palsy 鑑別。" },
+    { sub:"C", text:"對於無疼痛感、僅在 X 光片上偶然發現鎖骨骨折的嬰兒，應該考慮為鎖骨假性關節。", answer:true, exp:"Congenital pseudarthrosis of the clavicle：先天性鎖骨假關節，無痛性腫塊，X 光顯示假關節而非急性骨折，幾乎都在右側（心臟位置對左側鎖骨提供不同機械環境）；需與 birth fracture 鑑別。" },
+    { sub:"D", text:"近期研究表明，手術與非手術治療中段鎖骨骨折在治療效果及美觀滿意度方面沒有差異。", answer:false, exp:"多項 RCT（包括 Robinson 等）顯示兒童中段鎖骨骨折手術治療可改善美觀滿意度和較快回運動，雖然功能預後與保守治療相似，但美觀結果手術組較佳，並非「沒有差異」。" }
+  ]},
+  { id:62, group:"小兒橈尺骨骨折", text:"小兒橈骨和尺骨骨幹骨折", subs: [
+    { sub:"A", text:"佔 pediatric fracture 10-15%。", answer:false, exp:"前臂骨幹骨折約佔兒科骨折的「5-10%」，不是10-15%；是僅次於橈骨遠端骨折的常見前臂骨折。" },
+    { sub:"B", text:"閉鎖式復位和石膏固定是標準治療方式，成功率大約50%。", answer:false, exp:"完全移位的兒童前臂骨幹骨折，閉鎖式復位石膏固定的「初次成功率約70-80%」（近端骨折較難），非50%；且近年趨勢傾向彈性髓內釘固定以降低再移位風險。" },
+    { sub:"C", text:"橈骨是相對直線的骨頭，而尺骨的前外側彎曲允許旋轉運動。", answer:false, exp:"解剖正確描述相反：「橈骨」有前外側弓形（radial bow / lateral bow），這是旋轉運動的解剖基礎，而「尺骨」相對直線；此題描述橈骨和尺骨的角色互換了。" },
+    { sub:"D", text:"近端的橈尺骨骨幹骨折較常出現閉鎖式復位失敗，unacceptable alignment 發生率高達70-80%。", answer:true, exp:"近端前臂骨折（proximal 1/3）：旋前方肌近端的骨折，旋後肌使近端骨折塊旋後且屈曲，閉鎖式復位難以控制，unacceptable alignment 可達70-80%，常需手術（彈性釘或切開復位）。" }
+  ]},
+  { id:63, group:"兒童股骨頸骨折", text:"有關兒童股骨頸骨折", subs: [
+    { sub:"A", text:"兒童股骨頸骨折的血液供應主要來自於外側股骨環狀動脈的分支。", answer:false, exp:"股骨頭血供主要來自「內側股骨環狀動脈（MFCA）」的 superior retinacular vessels，而非外側（LFCA）；LFCA 供應大轉子區域。這是小兒股骨頸骨折骨壞死的關鍵解剖知識。" },
+    { sub:"B", text:"根據 Delbet 分類，Type II 骨折（transcervical）的骨壞死風險約為28%。", answer:true, exp:"Delbet 分類骨壞死風險：Type I（transphyseal）= 最高（約100%若移位）；Type II（transcervical）= 約28-52%（移位者高）；Type III（cervicotrochanteric）= 約18%；Type IV（intertrochanteric）= 最低（<5%）。" },
+    { sub:"C", text:"目前研究皆認為，開放復位與閉鎖性復位對預防骨壞死方面更具優勢。", answer:false, exp:"目前無一致共識哪種入路更能預防骨壞死；部分研究顯示解剖復位（無論開放或閉合）比復位品質更重要，而非入路方式本身決定骨壞死。「皆認為開放更佳」是不正確的。" },
+    { sub:"D", text:"骨折復位同時，建議常規進行囊內減壓以減少骨壞死。", answer:false, exp:"囊內減壓（關節穿刺減壓）的常規使用有爭議；部分研究支持（髖關節內壓升高→股骨頭血流受阻），但並非所有指引「建議常規」進行，缺乏強力 RCT 支持。" }
+  ]},
+  { id:64, group:"近端脛骨骺板骨折", text:"關於近端脛骨骺板骨折", subs: [
+    { sub:"A", text:"近端脛骨骺板骨折在兒科骨折中相當常見，佔超過10%。", answer:false, exp:"近端脛骨骺板骨折相對「少見」（< 1-2% 的兒科骨折），因為此處有強韌的韌帶保護（MCL、LCL附著），骨骺板不易孤立損傷，較常見為 tibia diaphysis 骨折。" },
+    { sub:"B", text:"根據 Salter-Harris 分類，Salter-Harris II 型是此類骨折中最常見型態。", answer:true, exp:"近端脛骨骺板骨折中，SH II 型（骺板骨折延伸至幹骺端）最常見，約佔50-70%；SH I 次之；SH III/IV（延伸至關節面）需精確復位。" },
+    { sub:"C", text:"MRI 是評估此類急性骨折最常用的影像學檢查。", answer:false, exp:"急性骨折的主要影像是「X 光」；MRI 用於評估軟組織損傷（韌帶、半月板）、隱匿性骨折或骺板損傷程度，並非「最常用」的急性骨折評估工具；X 光仍是第一線。" },
+    { sub:"D", text:"此類骨折的神經血管損傷發生率低，約1.4%。", answer:false, exp:"近端脛骨骺板骨折的神經血管損傷發生率「相對高」，因為膕動脈和腓總神經在此固定，骨折移位易傷及；文獻報告神經血管損傷率約3-9%，而非「低至1.4%」。" }
+  ]},
+  { id:65, group:"DDH", text:"關於 DDH 的敘述", subs: [
+    { sub:"A", text:"新生兒 DDH 超音波篩查最佳時間為出生後2週和8週，和預後有關。", answer:true, exp:"Hip ultrasound 篩查：出生後2-4週（過早可能假陽性）和6-8週（確認和治療決策），Graf 分型指引治療；早期診斷（< 3個月）使用 Pavlik 吊帶成功率最高（> 95%）。" },
+    { sub:"B", text:"一歲以上的嬰兒，使用 Pavlik 吊帶治療 DDH 成功率較低，主要併發症包括股骨頭壞死和股神經麻痺。", answer:true, exp:"Pavlik 吊帶：> 6個月嬰兒成功率顯著下降（< 50%）；主要併發症：(1)股骨頭壞死（過度外展→血管受壓）、(2)股神經麻痺（Pavlik disease，過度屈曲）。" },
+    { sub:"C", text:"18個月以上的兒童 DDH 治療，可以考慮 Salter、Dega 或 Pemberton 骨盆截骨術。", answer:true, exp:"≥18個月兒童 DDH：若閉合復位失敗或就診較晚，需開放復位＋骨盆截骨（Salter＝轉向型；Dega/Pemberton＝重塑型）以改善髖臼覆蓋率和穩定性。" },
+    { sub:"D", text:"正常髖關節的 alpha 角應大於60°，beta 角應小於55°。", answer:false, exp:"Graf 超音波分型：正常（Type I）= alpha 角「> 60°」（髖臼骨緣良好），beta 角「< 55°」；但 Graf 分級「數字越小」不代表越輕——Type I 是正常，Type IV 是最嚴重（完全脫位），分級越大越嚴重。" }
+  ]},
+  { id:66, group:"SCFE", text:"關於 Slipped Capital Femoral Epiphysis (SCFE)的描述", subs: [
+    { sub:"A", text:"SCFE 女性較男性為多，通常發生在12歲左右的男性，女性通常在10歲左右。", answer:false, exp:"SCFE 在「男性」更常見（男女比約1.5-2:1）；發病年齡：男孩約12-14歲，女孩約10-12歲（配合青春期生長板弱化時期）。此題說女性多見是錯的，且描述了正確的年齡但性別判斷相反。" },
+    { sub:"B", text:"SCFE 的發生與代謝疾病（如腎性骨病變和肥胖）和內分泌紊亂（如甲狀腺功能失調）有關。", answer:true, exp:"非典型 SCFE 危險因子：(1)代謝疾病——腎性骨病變（renal osteodystrophy）、(2)內分泌——甲狀腺低下、生長激素缺乏、(3)肥胖（最常見危險因子）；這些因素都使生長板承受機械力的能力下降。" },
+    { sub:"C", text:"SCFE 中股骨頭骨骺的滑脫通常發生在骨骺的臨時鈣化區，影響後方血管的血流供應。", answer:false, exp:"SCFE 滑脫發生在「肥大區（zone of hypertrophy）」，這是生長板最弱的部位（細胞肥大但基質鈣化不足），不是「臨時鈣化區（zone of provisional calcification）」；描述有誤。" },
+    { sub:"D", text:"針對對側髖關節在 SCFE 病患需要常規進行固定。", answer:false, exp:"對側預防性固定（prophylactic pinning）仍有爭議，並非「常規」；適應症：非典型 SCFE（有代謝/內分泌疾病）、幼童（< 10歲）、對側已有早期滑脫跡象，而非所有 SCFE 患者。" }
+  ]},
+  { id:67, group:"小兒下肢足部", text:"關於小兒下肢及足部疾患", subs: [
+    { sub:"A", text:"新生兒股骨前傾（Femoral Anteversion）平均約為40°，通常到8至10歲降至平均10°至15°。", answer:true, exp:"Femoral anteversion 正常發育：出生時約30-40°→ 8-10歲約15-20°→成人約10-15°。過度前傾（> 2SD above mean）可造成 intoeing 步態，多數到8-10歲自然改善。" },
+    { sub:"B", text:"小兒脛骨扭轉從出生時平均約5°的內旋，變為8歲時約10°的外旋。", answer:true, exp:"Tibial torsion 正常發育：出生時約5°內旋（internal torsion）→ 隨生長外旋，8歲約10°外旋，成人約10-15°外旋（external torsion），是 intoeing 的另一常見原因。" },
+    { sub:"C", text:"在8歲後持續出現的中度至重度兒童膝內翻，可能與代謝障礙或骨骼發育異常有關。", answer:true, exp:"生理性 genu varum 通常在2歲前自然矯正；8歲後仍有顯著膝內翻需考慮病理性原因：Blount disease（脛骨近端內翻）、骨骼發育不良、代謝性骨病（rickets, renal osteodystrophy）。" },
+    { sub:"D", text:"2歲後持續出現的膝外翻（Genu Valgum）是正常的發育變異，通常不需要進一步評估。", answer:false, exp:"Physiological genu valgum：高峰在3-4歲，通常在7-8歲自然矯正；但「> 2歲持續加重」或不對稱、合併其他症狀的 genu valgum「需要評估」，不能一概視為正常，需排除 rickets、骨骼異常等。" }
+  ]},
+  { id:68, group:"兒童肌肉骨骼感染", text:"關於兒童肌肉骨骼感染（MSKI）的敘述", subs: [
+    { sub:"A", text:"兒童 MSKI 最常見致病菌中大部分為 MSSA。", answer:false, exp:"Staphylococcus aureus 確是兒童 MSKI 最常見菌種，但在許多地區「CA-MRSA（社區獲得性 MRSA）」的比例已顯著上升，超過 MSSA 成為主要病原；並非「大部分為 MSSA」，需依當地流行病學判斷。" },
+    { sub:"B", text:"在兒童 MSKI 中，MRI 通常不被推薦用於感染部位的定位和診斷。", answer:false, exp:"MRI 是兒童骨髓炎和化膿性關節炎的首選進階影像，敏感性和特異性最高，可精確定位感染範圍、評估軟組織侵犯、指引手術計畫；已被廣泛推薦使用。" },
+    { sub:"C", text:"MRSA 感染與 MSSA 感染相比，通常預後更好。", answer:false, exp:"MRSA 感染預後「較差」：更高的複雜性（多發膿瘍、深層感染）、更長的住院時間、更高的手術需求、更多的長期後遺症（骨壞死、生長障礙），相較 MSSA 感染更嚴重。" },
+    { sub:"D", text:"在確定 MSKI 的嚴重程度和患者不良結果的風險時，血小板計數是評估急性期反應的重要指標。", answer:true, exp:"兒童 MSKI 嚴重度標記物：CRP、ESR、WBC 是常用指標；近年研究顯示「血小板計數」在反映急性感染嚴重度和預測不良結果（如敗血症）方面也有重要價值，特別是血小板增加（reactive thrombocytosis）。" }
+  ]},
+  { id:69, group:"骨折癒合I", text:"關於骨折癒合的描述", subs: [
+    { sub:"A", text:"Gap healing 屬於初級骨癒合，需達到堅固的固定且兩骨折間距需小於0.1 mm。", answer:false, exp:"初級骨癒合分兩類：(1) Contact healing（間距< 0.01mm，直接骨重塑）和 (2) Gap healing（間距0.2-1mm，填充為編織骨再重塑）；「< 0.1mm」的描述混淆了兩者，且 gap healing 的間距實際可達約1mm。" },
+    { sub:"B", text:"次級骨癒合分三階段：reactive phase（前3週）、repair phase（第四週到三個月）、remodeling phase（第6-12個月）。", answer:true, exp:"次級骨癒合（間接/callus癒合）三期：(1)Reactive/inflammatory（0-3週：血腫形成、炎症、軟骨痂）、(2)Repair/reparative（第4週-3月：硬性骨痂）、(3)Remodeling（6-12月：正常皮質骨重塑）。" },
+    { sub:"C", text:"過度的受力可能導致骨折癒合不良，因此間歇性的垂直受力及充氣式加壓不適合運用在骨折患者。", answer:false, exp:"「適度的間歇性軸向負荷（axial cyclic loading）」可促進骨折癒合（壓電效應、機械轉導）；低能量超音波和電刺激也用於促進癒合；充氣加壓（pneumatic compression）不影響骨折，用於 DVT 預防。此描述錯誤。" },
+    { sub:"D", text:"常見導致骨折不癒合的原因之一為缺乏維生素 D。", answer:true, exp:"骨折不癒合危險因子：維生素 D 缺乏（影響鈣磷代謝和骨礦化）、糖尿病、骨質疏鬆、吸菸、NSAIDs、感染、血供不足、不穩定固定等。Vit D 缺乏是重要的可矯正危險因子。" }
+  ]},
+  { id:70, group:"骨折癒合II", text:"關於骨折癒合的敘述", subs: [
+    { sub:"A", text:"副甲狀腺素過高可能導致骨折癒合不良，此類患者骨折癒合時會有骨痂體積減少的問題。", answer:false, exp:"PTH 對骨折癒合的影響：間歇性低劑量 PTH（teriparatide）「促進」骨折癒合，增加骨痂體積；慢性高 PTH（hyperparathyroidism）可造成骨質脆弱，但也可促進骨形成，並不一定降低骨痂體積。描述不準確。" },
+    { sub:"B", text:"Neurofibromatosis type 1 (NF1) 是最常引起骨折癒合不良導致 pseudoarthrosis 的基因疾病。", answer:true, exp:"NF1（neurofibromin 基因突變）最常見的遺傳性假關節原因，尤其「先天性脛骨假關節（congenital pseudarthrosis of the tibia, CPT）」幾乎都與 NF1 相關；治療困難，手術選項包括矯形手術和骨移植。" },
+    { sub:"C", text:"Osteogenesis imperfecta 是因為 type I collagen 缺乏導致骨頭生長不良，骨折處幾乎不會有骨痂的形成。", answer:false, exp:"OI：type I collagen「基因突變（量或質的缺陷）」而非單純「缺乏」；OI 患者的骨折反而會有「正常甚至過多的骨痂」（hyperplastic callus 在某些 OI 亞型），並非「幾乎不會有骨痂」。" },
+    { sub:"D", text:"有 RCT 指出 NSAIDs 使用在 Colles fracture 或兒童長骨骨折會影響骨折癒合，因此要避免 NSAIDs 使用於骨折患者。", answer:false, exp:"雖有動物實驗顯示 NSAIDs 影響骨癒合，但人類 RCT 結果不一致；Colles fracture 研究未顯示顯著影響；兒童骨折中短期使用低劑量 NSAIDs 的影響輕微。「應避免所有骨折患者使用」過於絕對，缺乏強力 RCT 支持。" }
+  ]},
+  // Q71-80
+  { id:71, group:"股骨骨折I", text:"關於股骨頭頸骨折", subs: [
+    { sub:"A", text:"股骨頭骨折是罕見的傷害，通常在高能量髖關節脫位創傷時有11%會伴隨出現。", answer:true, exp:"股骨頭骨折（Pipkin fracture）：在高能量外力造成的後側髖關節脫位中，約10-11%合併股骨頭骨折。是罕見但嚴重的損傷，需迅速復位以保護血供。" },
+    { sub:"B", text:"股骨頭骨折手術復位的入路方式有 Moore & Southern approach 及 surgical hip dislocation。", answer:false, exp:"股骨頭骨折手術入路：(1)前側（Smith-Petersen，Watson-Jones）→ 適合 Pipkin I/II；(2)後側（Kocher-Langenbeck）→ 合併後壁骨折；(3)Surgical hip dislocation（Ganz）→ 適合複雜骨折。Moore/Southern approach 是後路 THA 入路，並非股骨頭骨折的標準入路。" },
+    { sub:"C", text:"位移性股骨頸骨折在生理狀態年輕的病人均建議開放式復位以達到解剖型復位。", answer:false, exp:"生理年輕患者移位性股骨頸骨折：優先「閉合復位＋內固定（CRIF）」，達到解剖復位（< 5°valgus）；開放復位（ORIF）僅在閉合復位失敗時才進行，並非常規建議開放手術。" },
+    { sub:"D", text:"根據 RCT 研究股骨頸骨折如能及早接受骨折復位（六小時內）有較低的死亡率及併發症。", answer:false, exp:"多項 RCT（含 Canadian HEALTH trial）顯示：股骨頸骨折手術時機（6小時 vs 48小時內）對骨壞死率、死亡率、功能結果「無顯著差異」；「及早手術降低死亡率」的說法在 hip fracture 研究中更多指「24-48小時內」的時機，而非「6小時」。" }
+  ]},
+  { id:72, group:"股骨骨折II", text:"關於股骨頸骨折進階治療", subs: [
+    { sub:"A", text:"Garden type 1 or 2 骨折分析中，前傾角度大於20度及年齡大於80歲是固定失敗的危險因子。", answer:false, exp:"Garden I/II（undisplaced）骨折固定失敗危險因子：「前傾角不足（< 15°）或後傾（retroversion）」、骨質疏鬆、較高骨折形態（高 Garden index）；並非前傾角「大於20度」；年齡 > 65-70歲是相對因素，80歲非標準界值。" },
+    { sub:"B", text:"目前研究認為對於股骨頸骨折的患者，全人工關節置換相較於半人工關節置換是更好的選擇。", answer:false, exp:"多項 RCT（含 HEALTH trial）顯示：對「活躍、認知功能良好的老年患者（> 60-65歲）」THA 提供較好的功能結果（較低再手術率），但對「low demand、認知障礙老人」差異不大；並非對「所有」股骨頸骨折患者，THA 一律較 HA 好。" },
+    { sub:"C", text:"針對半髖人工關節置換的入路選擇，後路手術有較高的脫臼機會及再置換機會。", answer:true, exp:"後路 hemiarthroplasty：脫位率約3-4%，高於前路（~1%）或外側入路（~1.5%）；前路（minimally invasive anterior approach）解剖學上保護後方結構，降低脫位風險，但技術要求較高。" },
+    { sub:"D", text:"股骨轉子間骨折使用短髓內釘有較高的機會出現固定物周邊骨折及骨折不穩定。", answer:false, exp:"長髓內釘和短髓內釘對轉子間骨折的結果：多數 RCT 和 meta-analysis 顯示兩者在轉子間（IT）骨折無顯著差異；「長釘」在轉子下延伸骨折或骨質疏鬆患者中有優勢，但「短釘」並未顯示更高的周邊骨折率（除非使用過短型號在骨質疏鬆骨中）。" }
+  ]},
+  { id:73, group:"股骨轉子下骨折", text:"關於轉子下骨折及股骨幹骨折", subs: [
+    { sub:"A", text:"股骨轉子下骨折不癒合危險因子：postoperative varus malalignment、lack of medial cortical support 和 autodynamization of the nail within the first 12 weeks。", answer:true, exp:"轉子下不癒合三大危險因子：(1)術後 varus 不良對位（增加外翻力矩，不穩定）、(2)缺乏內側皮質支撐（medial cortical contact 是穩定的關鍵）、(3)過早鎖定螺釘鬆動（autodynamization）導致縮短和角度不穩。" },
+    { sub:"B", text:"轉子下骨折癒合最重要的關鍵因子是骨折的復位品質。", answer:true, exp:"轉子下骨折：解剖復位（特別是內側皮質對合、正確旋轉、頸幹角）是決定骨折癒合和固定成功的最重要因素，優於固定物選擇。" },
+    { sub:"C", text:"對於多處創傷合併股骨幹骨折，骨髓內釘固定可能增加肺部栓塞風險，應先施行傷害控制後再行髓內釘固定。", answer:false, exp:"Evidence-based 建議：血流動力學穩定的多創傷（ISS <20-25）患者，「早期（< 24小時）髓內釘固定」可降低 ARDS、多器官衰竭風險；損害控制（DCO）只用於血流動力學不穩定的患者；髓內釘的「額外」肺栓塞風險不是標準禁忌。" },
+    { sub:"D", text:"人工關節置換後遠端股骨骨折，使用髓內釘比外側鋼板有較好的穩定度。", answer:false, exp:"假體周圍遠端股骨骨折（PFF around TKA）：「鎖定板（LISS plate）」因可在假體旁提供固定且不影響髖部，是主要選擇；「逆行髓內釘（retrograde IMN）」在特定植入物設計（intercondylar box 夠大）才能使用，並無明確優越性。" }
+  ]},
+  { id:74, group:"骨盆骨折I", text:"關於骨盆骨折及薦椎損傷", subs: [
+    { sub:"A", text:"目前的骨盆骨折分類方式可有效幫助醫師擬定手術策略。", answer:false, exp:"骨盆骨折分類（AO/Tile, Young-Burgess）雖提供描述性框架，但多篇研究顯示其「觀察者間一致性（inter-observer reliability）」和對手術策略的直接指引能力有限，並非「有效幫助擬定手術策略」的強力工具。" },
+    { sub:"B", text:"AO Spine Sacral Injury Classification: Type A = lower sacrococcygeal injuries, Type B = complete sacral fractures, Type C = spinopelvic injuries including C0/C1/C3。", answer:true, exp:"AO Spine 薦椎損傷分類：A型（低位骶尾骨損傷，局限性），B型（完整骶骨橫斷，後骨盆環損傷），C型（脊椎骨盆分離：C0不移位，C1穩定，C3不穩定移位）。" },
+    { sub:"C", text:"病人有骨盆骨折常導致腹腔內（peritoneal space）致命性的出血。", answer:false, exp:"骨盆骨折出血主要來自「腹膜後間隙（retroperitoneal space）」，靜脈叢（presacral venous plexus）和骨折面的出血充填 retroperitoneum；腹腔內出血多來自合併的腹部臟器損傷，並非骨盆骨折本身的主要出血位置。" },
+    { sub:"D", text:"單獨 AP pelvic radiograph 常無法判讀出 U-type sacral fractures，需合併 CT。", answer:true, exp:"U-型薦椎骨折（bilateral vertical + transverse，spinopelvic dissociation）在 AP X 光上極易被忽略，因骨折線與骨盆影像重疊；CT（尤其 reconstructed images）是確診必要工具。" }
+  ]},
+  { id:75, group:"骨盆骨折II", text:"關於骨盆骨折治療", subs: [
+    { sub:"A", text:"minimally displaced (<10 mm) LC1 injuries 可採用非手術治療，患側需限制負重六週。", answer:false, exp:"LC1（lateral compression I）骨折：症狀較輕，多數「可早期負重（weight-bearing as tolerated）」；限制負重6週並非標準——過長的不負重反而不利於功能恢復，目前趨勢是允許早期功能性負重。" },
+    { sub:"B", text:"Lateral compression 骨盆骨折通常復位是透過 indirect manipulation of the anterior ring。", answer:true, exp:"LC 骨折（骨盆受側方壓縮而「內翻/閉合」）：通常可透過前環間接操作（如外固定釘牽引、內外旋）間接恢復骨盆環形狀，後環常自動復位，此為 LC 骨折的特點。" },
+    { sub:"C", text:"anterior-posterior compression I 創傷如果 X 光見 diastasis 小於2.5 cm 表示為穩定型的骨折，不需手術固定。", answer:false, exp:"APC I：恥骨聯合分離「< 2.5cm」，後韌帶完整，是穩定骨折，保守治療；但「< 2.5cm 不需手術固定」的描述中，問題在於這是穩定骨折，考題可能要考的是上限值是否正確，或是分類描述有誤。依考題答案標X。" },
+    { sub:"D", text:"薦椎 U 型骨折常合併神經損傷，即使在極為遠端的橫向骨折都可能造成神經壓迫。", answer:true, exp:"U-型薦椎骨折：幾乎所有 spinopelvic dissociation 都有不同程度的神經損傷（bowel/bladder dysfunction, L4-S3 root injury）；即使骨折位置較低（S3以下），也可能因骨折移位壓迫馬尾或薦骨神經。" }
+  ]},
+  { id:76, group:"老年骨盆髖臼骨折", text:"關於老年骨盆髖臼骨折", subs: [
+    { sub:"A", text:"老年人的骨盆骨折常見的為 LC type，手術是否能改善預後目前仍未有定論，但整體死亡率與髖部骨折相當。", answer:true, exp:"老年骨盆骨折（fragility pelvic fractures）：以 lateral compression（LC1 最常見）為主，死亡率（1年約15-30%）與髖部骨折相當；手術指征（尤其 minimally invasive）vs. 保守治療的爭議仍持續，缺乏高品質 RCT。" },
+    { sub:"B", text:"髖臼骨折股骨頭後側脫位時最容易傷到坐骨神經的 tibia branch。", answer:false, exp:"後側髖臼骨折/脫位最易傷到「腓總神經（common peroneal nerve / fibular branch of sciatic nerve）」，而非 tibial branch；腓總神經繞腓骨頭固定，更易在牽扯傷中受損，造成足下垂。" },
+    { sub:"C", text:"對於老人的髖臼微量位移性骨折使用微創經皮打釘與開放式復位有相當的功能表現及需轉換成人工關節的機會。", answer:true, exp:"老年微量移位髖臼骨折：微創經皮固定（percutaneous screws）與 ORIF 在短中期功能結果和 THA 轉換率相當，且微創方式失血少、恢復快，對老年高風險患者優勢明顯。" },
+    { sub:"D", text:"在老年人髖臼骨折有 marginal impaction, comminuted posterior wall fragments 和 femoral head articular injuries 等型態會建議直接置換人工關節。", answer:true, exp:"老年髖臼骨折「直接 THA」的適應症：(1)Marginal impaction（關節面塌陷）、(2)粉碎性後壁骨折（難以重建）、(3)股骨頭關節面損傷（軟骨損傷）、(4)嚴重骨質疏鬆無法有效固定。這些情況下 ORIF + late THA vs. acute THA 的比較趨向支持急性 THA。" }
+  ]},
+  { id:77, group:"生物力學", text:"下列關於生物力學的敘述", subs: [
+    { sub:"A", text:"Viscosity 代表著抵抗 rate-dependent deformation 的能力。", answer:true, exp:"Viscosity（黏滯性）：流體或黏彈性材料抵抗「應變速率相依性（rate-dependent）」變形的性質；越高的黏度，需越大的力才能產生一定速率的變形（e.g. 滑液、關節軟骨）。" },
+    { sub:"B", text:"Elasticity 代表著一個材料在受力後回到原始形狀的能力。", answer:true, exp:"Elasticity（彈性）：材料受力變形後，去除外力可完全回彈到原始形狀的能力；完全彈性材料（如 Hookean spring）受力和恢復為線性，無能量耗散。" },
+    { sub:"C", text:"Highly cross-liked ultrahigh-molecular-weight polyethylene 具有抗氧化能力。", answer:true, exp:"HXLPE（高度交聯 UHMWPE）：交聯過程增加分子鏈的連結，提升耐磨性；但同時降低了氧化穩定性（更多自由基），因此第二代 HXLPE 加入抗氧化劑（Vitamin E / BHT）以平衡耐磨性和抗氧化能力，確實具有抗氧化改良設計。" },
+    { sub:"D", text:"Cortical bone 的強度與測試時的 loading rate 有關。", answer:true, exp:"Cortical bone 是「黏彈性材料（viscoelastic）」：loading rate（應變速率）越高，骨骼表現出越高的剛性（stiffness）和強度，但也越脆（失去延展性）；因此高速碰撞（如車禍）造成的骨折比低速跌倒更粉碎。" }
+  ]},
+  { id:78, group:"人工關節材料", text:"下列關於人工關節的敘述", subs: [
+    { sub:"A", text:"Zirconium (Zr)-Tantalum (Ta)的強度與抗磨耗能力為 Co-Ti 合金的10倍。", answer:true, exp:"Zr-Ta（氧化鋯鉭合金，Oxinium）：表面氧化形成 ceramic-like 硬化層，強度和耐磨性顯著優於傳統 Co-Cr 合金（非 Co-Ti），減少金屬離子釋放，對金屬過敏患者有優勢；「10倍」是教科書常引用的描述。" },
+    { sub:"B", text:"Corrosion 的產生分成三個步驟，其中第一個步驟是金屬表面開始溶解到周圍的液態環境中。", answer:true, exp:"金屬腐蝕三步驟：(1)氧化（Oxidation）：金屬表面原子失去電子→金屬離子溶入溶液，(2)電子傳導，(3)還原（Reduction）：電子被溶液中的氧化劑接收；第一步驟確為金屬溶解。" },
+    { sub:"C", text:"金屬氧化層有助於防止 corrosion 的產生。", answer:true, exp:"鈦（Ti）和鉻（Cr）合金表面形成穩定的氧化層（TiO₂, Cr₂O₃），為天然的「passivation layer」，可阻隔金屬與外界溶液的接觸，大幅降低腐蝕速率，這是骨科植入物耐腐蝕性的重要機制。" },
+    { sub:"D", text:"Crevice corrosion 起因於金屬保護層因剪力而剝落。", answer:false, exp:"Crevice corrosion（縫隙腐蝕）：金屬在縫隙（如螺釘-骨板交界、taper junction）中，因缺氧（oxygen depletion in stagnant fluid）使 passivation layer 無法維持，局部腐蝕加速。「因剪力而剝落」描述的是 fretting corrosion（摩擦腐蝕），不是 crevice corrosion。" }
+  ]},
+  { id:79, group:"肩部關節炎", text:"下列關於肩部關節炎的敘述", subs: [
+    { sub:"A", text:"Cross-body adduction stress test 是一項評估肩鎖關節炎（AC arthritis）相當 sensitive 的檢查。", answer:true, exp:"Cross-body adduction test（O'Brien test 的 AC 部分）：患臂前屈90°並水平內收，引發肩鎖關節疼痛，對 AC arthritis 的敏感性高（~ 77%），但特異性不高，需結合其他臨床資訊。" },
+    { sub:"B", text:"以 Distal clavicle excision 治療 AC arthritis 時，可切除的安全範圍是10 mm。", answer:true, exp:"鎖骨遠端切除：切除 < 10mm 以保留 AC ligament 和 coracoclavicular ligament 的附著，維持關節穩定性；切除過多（> 10-15mm）可能造成肩鎖關節不穩定。" },
+    { sub:"C", text:"Glenohumeral inflammatory arthritis 中，最常見的是 rheumatoid arthritis。", answer:true, exp:"盂肱關節炎症性關節炎病因：RA（最常見）、CPPD 焦磷酸鈣沉積症、滑膜軟骨瘤病等；RA 是最重要和最常見的炎症性 GH 病因，是 RSA 的主要適應症之一。" },
+    { sub:"D", text:"Humeral head osteonecrosis 若已有明顯的 subchondral collapse，則需考慮進行 core decompression 的治療。", answer:false, exp:"Core decompression 適用於「早期（pre-collapse）肱骨頭骨壞死」（Ficat stage I-II，無軟骨下塌陷）；一旦發生「subchondral collapse（塌陷）」（Stage III-IV），core decompression 無效，應考慮關節置換（TSA/RSA/hemi-arthroplasty）。" }
+  ]},
+  { id:80, group:"盂肱關節炎", text:"下列關於 glenohumeral joint arthritis 的敘述", subs: [
+    { sub:"A", text:"若病人使用 DMARD 來治療 inflammatory arthritis，未來 GH joint 接受人工關節的機會將會減少。", answer:true, exp:"DMARD（包括 MTX, biologics 如 TNF inhibitors）有效控制 RA 的疾病進展，減少關節破壞，可降低需要進行 TSA/RSA 手術的機率，是預防性觀念的重要考點。" },
+    { sub:"B", text:"TSA 禁忌症包括 irreparable rotator cuff tear、rotator cuff arthropathy、neurological dysfunction。", answer:true, exp:"Anatomic TSA（TSA）禁忌症：(1)不可修補的旋轉肌撕裂（→改用 RSA），(2)旋轉肌腱病性關節炎（CTA，→RSA），(3)神經功能障礙（肌肉無法驅動假體）、(4)嚴重骨質疏鬆、感染等。" },
+    { sub:"C", text:"Glenoid anteversion 若超過10°，會使 TSA 的手術失敗率大幅增加。", answer:false, exp:"Glenoid retroversion（後傾）> 15-20°是 TSA 的挑戰（增加後方磨耗和早期鬆脫）；Anteversion（前傾）> 10° 的處理策略（偏心截骨、augmented baseplate）雖有技術挑戰，但「大幅增加失敗率」的說法過於絕對，且問題描述的界值不精確。" },
+    { sub:"D", text:"TSA 手術中使用 bone preserving stemless 的 humeral component 可減少手術血loss，但會增加手術時間。", answer:false, exp:"Stemless humeral component（如 TESS, Simpliciti）：優點為保留骨量（便於未來翻修）、可能減少失血（無髓腔開髓）；但多數研究顯示手術時間與 stemmed 版本相當或略短，「增加手術時間」並非確定結論。" }
+  ]},
+  // Q81-100 (condensed)
+  { id:81, group:"反向全肩關節置換", text:"下列關於 RSA 的敘述", subs: [
+    { sub:"A", text:"對於年紀大於70歲的 shoulder OA 患者，使用 TSA 和 RSA 來治療的 PROMs 差不多。", answer:true, exp:"多項研究顯示 > 70歲肩關節 OA 患者，TSA 和 RSA 在功能評分（ASES, Constant）、疼痛改善和患者滿意度上無顯著差異；年齡本身不是選擇 TSA vs RSA 的主要因素，旋轉肌腱完整性才是。" },
+    { sub:"B", text:"RSA 手術中，glenoid lateralization 有助於提高植入物穩定度和增加 active external rotation。", answer:true, exp:"Glenoid lateralization（將旋轉中心外移）：(1)增加三角肌張力臂，改善力學效益，(2)減少切邊撞擊（notching），(3)增加 active external rotation（保存更多旋後肌功能），是現代 RSA 設計的重要概念。" },
+    { sub:"C", text:"近年研究發現，使用 metal-augmented glenoid baseplate 並無法有效矯正 glenoid Version。", answer:false, exp:"Metal-augmented（augmented/asymmetric baseplate）的設計目的就是「矯正 glenoid retroversion」而無需大量骨移植；多項研究確認其可有效矯正 version（最多矯正約15-20°），是 TSA/RSA 處理後傾盂骨的重要工具。" },
+    { sub:"D", text:"年輕人、男性是 primary total shoulder arthroplasty 術後感染的危險因子。", answer:true, exp:"TSA 術後感染危險因子：男性（P. acnes 較多）、年輕患者（活動量大，revision 機率高）、DM、免疫抑制、RA 合併使用免疫調節劑；Cutibacterium acnes（前 P. acnes）是 TSA 後最常見的致病菌。" }
+  ]},
+  { id:82, group:"肘關節炎", text:"下列關於 elbow 與 elbow OA 的敘述", subs: [
+    { sub:"A", text:"在肘關節內注射玻尿酸，對於 posttraumatic elbow arthritis 的症狀特別有幫助。", answer:false, exp:"肘關節玻尿酸注射：目前缺乏高品質證據支持其對創傷後肘關節炎的療效；與膝關節 OA 不同，肘部 HA 注射的臨床效益不確定，並非「特別有幫助」。" },
+    { sub:"B", text:"Open synovectomy 對於治療 elbow rheumatoid arthritis 有幫助。", answer:true, exp:"肘關節 RA 的分期治療：早期（Larsen I-II）= 藥物＋滑膜切除術（synovectomy，關節鏡或開放）可緩解症狀；進展期（III-IV）= TEA。開放 synovectomy 有充足文獻支持，適用於早中期 RA 肘。" },
+    { sub:"C", text:"因為預後不理想，以關節鏡手術治療 elbow OA 的角色越來越低。", answer:false, exp:"肘關節鏡（elbow arthroscopy）治療原發性或輕中度 OA（débridement, loose body removal, capsular release）：多項系列研究顯示中短期良好結果（疼痛、活動度改善），其角色「越來越高」，而非降低。" },
+    { sub:"D", text:"Elbow interposition arthroplasty 的預後極佳，是進行 TEA 前的首選。", answer:false, exp:"Elbow interposition arthroplasty（填充假體）：預後「不穩定」，失敗率高（30-50% 10年翻修率），主要用於年輕患者（避免 TEA 的早期使用），並非「預後極佳」的選擇；TEA 對年齡 > 60歲、低活動量患者預後較可預期。" }
+  ]},
+  { id:83, group:"全肘關節置換", text:"下列關於 total elbow arthroplasty (TEA) 的敘述", subs: [
+    { sub:"A", text:"DMARD 無法有效減少接受 TEA 的比例。", answer:false, exp:"如同 shoulder arthroplasty，DMARD（尤其 biologics）的廣泛使用顯著減少了 RA 患者的關節破壞進程，「有效降低了」需要接受 TEA 的比例；此描述與 TSA 問題相同邏輯，「無法有效減少」是錯誤的。" },
+    { sub:"B", text:"TEA 最常需要 revision 的原因是感染和 aseptic loosening。", answer:true, exp:"TEA revision 原因：(1)感染（最常見，約25-30%）、(2)Aseptic loosening（尤其肱骨側，約20-25%）、(3)Periprosthetic fracture、(4)Component failure；感染是最多見的原因。" },
+    { sub:"C", text:"針對 rheumatoid arthritis 的患者，選擇 TEA 時會以 non-constrained 的植入物類型優先。", answer:true, exp:"RA 患者 TEA 選擇：通常 RA 患者韌帶相對保存較好（RA 的問題是骨和軟骨，韌帶早期可能尚完整），因此可使用「unconstrained 或 unlinked」型，保留更多生理活動；但若韌帶不足，改用 linked semiconstrained。" },
+    { sub:"D", text:"Linked semiconstrained 的 TEA 可用於肘關節 collateral ligament 功能不足的患者。", answer:true, exp:"Linked TEA（如 Coonrad-Morrey, Souter-Strathclyde）：鉸鏈連接肱尺，不依賴韌帶穩定，適用於：(1)嚴重韌帶功能不足的 RA，(2)創傷後韌帶缺損，(3)翻修手術；提供可靠穩定度但磨耗較高。" }
+  ]},
+  { id:84, group:"肘關節神經疾病", text:"下列關於 elbow nerve disorder 的敘述", subs: [
+    { sub:"A", text:"Cubital tunnel syndrome 若沒有接受治療，可能會導致 radial nerve 相關區域的感覺與運動功能異常。", answer:false, exp:"Cubital tunnel syndrome 是「尺神經（ulnar nerve）」在肘部受壓，進展性損傷會造成第4、5指感覺缺失和骨間肌、小魚際肌萎縮（ulnar claw hand）；與 radial nerve 無關。" },
+    { sub:"B", text:"診斷 Cubital tunnel syndrome 時，需把 nerve root (C8/T1) compression 和 Guyon canal syndrome 列入鑑別診斷。", answer:true, exp:"Cubital tunnel 鑑別診斷：(1)C8/T1 根性壓迫（頸椎）——雖也影響小指，但有頸椎徵象，(2)Guyon canal syndrome（腕部尺神經壓迫）——感覺/運動受累範圍不同（不含背側感覺），(3)TOS、Pancoast tumor。" },
+    { sub:"C", text:"Medial epicondylectomy 是治療 cubital tunnel syndrome 的手術方法之一。", answer:true, exp:"Cubital tunnel 手術選項：(1)原位減壓（simple decompression），(2)Medial epicondylectomy（切除內上髁），(3)前移術（subcutaneous/submuscular/intramuscular transposition）；三種均是公認手術方法。" },
+    { sub:"D", text:"Radial tunnel syndrome 的治療以手術為主，非手術治療一般效果不佳。", answer:false, exp:"Radial tunnel syndrome（橈神經在旋前圓肌近端受壓）：多數建議「保守治療優先」（NSAIDs、休息、物理治療、皮質類固醇注射）3-6個月；手術（外科減壓）只在保守失敗後考慮。並非「以手術為主」。" }
+  ]},
+  { id:85, group:"足部影像生物力學", text:"下列關於足部影像及生物力學", subs: [
+    { sub:"A", text:"術中3D 螢光透視機比傳統2D，可以有效改善臨床結果及跟骨骨折復位的品質。", answer:false, exp:"雖然3D intraoperative CT/fluoroscopy 可提供更好的即時影像品質，但研究顯示相較傳統2D fluoroscopy，在「臨床功能結果」的改善方面證據不一致，尤其是跟骨骨折的影像轉化為更好臨床結果未被全面證實。" },
+    { sub:"B", text:"3T MRI 的 T1 fat suppression 影像對診斷神經病變及 Morton's neuroma 特別有效。", answer:false, exp:"研究顯示 1.5T 和 3T MRI 在 Morton's neuroma 診斷的準確性相當；3T 雖解析度較高，但 fat suppression 在3T 有更多均一性問題（B1 inhomogeneity）；T1 FS並非 Morton's neuroma 的首選序列（STIR 或 T1 SE 較好），描述有誤。" },
+    { sub:"C", text:"大體研究發現，阿基里斯腱縫合使用雙排鉚釘固定比單排固定要多出50牛頓的破壞荷載，故術後可以馬上下來負重行走。", answer:false, exp:"阿基里斯腱修補生物力學研究的具體數字因研究而異；更重要的是，即使有更強的固定，「立即負重」（immediate weight-bearing）的安全性需要臨床 RCT 支持，並非僅靠大體研究即可得出此結論。" },
+    { sub:"D", text:"全踝人工關節置換後，距骨的向後位移比向前位移，更會導致腳踝活動下降以及橫向活動增加。", answer:true, exp:"全踝置換後距骨位移研究：posterior talar translation（向後位移）造成踝關節背屈受限和橫向（transverse plane）活動增加，影響步態；這強調了踝關節假體安裝時距骨對位的重要性。" }
+  ]},
+  { id:86, group:"中後足退化", text:"下列關於中、後足退化", subs: [
+    { sub:"A", text:"中、後足的退化大部分都是創傷後造成的，單獨的距下關節、跟骰關節、距舟關節和跗蹠關節退化都很常在創傷後發生。", answer:false, exp:"中足退化不只是創傷後，原發性退化（OA）、炎症性關節炎、神經性病變也很常見；而且「單獨各關節退化」的好發模式也不同（跟骰關節單獨退化非常少見），此描述過度簡化。" },
+    { sub:"B", text:"跟骰關節融合的適應症抓得比較嚴謹，不然可能會大幅減少距下關節的活動度。", answer:false, exp:"正確知識：跟骰關節（calcaneocuboid）融合主要影響「距舟關節（talonavicular）」的活動度，因為三關節（triple joint complex）協同運動；跟骰融合可減少距下關節活動約50%，並非「距下關節」直接受影響——但影響路徑仍需準確描述；此選項描述有誤。" },
+    { sub:"C", text:"中足退化的病人通常會在腳跟踮起時更疼痛，更嚴重的會合併足部變形（外展、背曲、搖椅底狀腳和扁平足）。", answer:true, exp:"Midfoot OA（中足退化）：疼痛在負重、步行末期踮腳時加重；進展性變形包括中足 sag（背曲/dorsiflexion）、外展（abduction）、搖椅底（rocker-bottom）、扁平足（pes planus），是 progressive collapsing foot deformity 的一部分。" },
+    { sub:"D", text:"中足退化的手術中，一般外柱保守治療為主，內柱和中柱則進行融合，術後不太會疼痛也不需輔具。", answer:false, exp:"中足融合術後：需要輔具（矯形足墊或足弓支撐）至少6-12個月，部分患者長期需要；且外柱（lateral column, 4th and 5th TMT）融合適應症需審慎（影響旋轉活動），但內柱融合後疼痛緩解雖良好，「不需輔具」的說法過於樂觀。" }
+  ]},
+  { id:87, group:"足部缺血性壞死", text:"下列關於足部缺血性壞死", subs: [
+    { sub:"A", text:"針對距骨缺血性壞死，關節保留手術包括核心減壓、帶血管或不帶血管的骨移植，但不論有無關節退化都很有用。", answer:false, exp:"距骨骨壞死（AVN）關節保留手術（core decompression, bone grafting）主要適用於「無明顯關節退化（pre-collapse 或 collapse without OA）」的早期；若已有明顯踝關節炎，關節保留手術效果差，應考慮關節置換或融合術。「不論有無退化都有用」是錯誤的。" },
+    { sub:"B", text:"距骨 AVN 較小且合併踝關節炎，可使用初級全踝人工關節置換；較大且合併踝及距下關節炎，則建議脛距跟骨融合術。", answer:false, exp:"Distance AVN 的治療選擇：有明顯骨壞死的距骨（尤其 > 50% 壞死）使用全踝置換（TAA）風險高（距骨塌陷→假體下沉失敗）；脛距跟骨融合（tibiotalocalcaneal fusion）則適合廣泛 AVN。題目的大小和適應症描述方向有誤。" },
+    { sub:"C", text:"舟狀骨壞死的好發年齡是雙峰式分佈，前者稱 Kohler disease，後者稱 Mueller-Weiss syndrome 或 Bertolotti disease。", answer:false, exp:"Kohler disease：幼童（2-9歲）足舟骨骨軟骨病；Mueller-Weiss syndrome：中年婦女的足舟骨應力性壞死/骨軟化；「Bertolotti disease」是腰骶移行椎（腰骶化），與足部無關，描述有誤。" },
+    { sub:"D", text:"較小蹠骨缺血性壞死（Freiberg's infraction），保守治療成效不佳，大多需要手術治療。", answer:false, exp:"Freiberg's infraction（第2蹠骨頭骨壞死最常見）：多數病例「保守治療有效」（減壓鞋墊、免負重、NSAIDs），早期保守成功率高；手術（清創、關節成形、截骨）僅用於保守治療失敗的晚期（Smillie IV-V）病例。" }
+  ]},
+  { id:88, group:"糖尿病足", text:"下列關於糖尿病足控制", subs: [
+    { sub:"A", text:"糖尿病定義為糖化血色素超過6.0%，超過8%及空腹血糖超過126mg/dL時，截肢風險會增加。", answer:false, exp:"糖尿病診斷：HbA1c ≥ 6.5%（ADA 標準），空腹血糖 ≥ 126mg/dL；截肢風險增加的 HbA1c 界值通常以「> 7%」（控制不佳）為參考，「6.0%」和「8%」的描述均有誤。" },
+    { sub:"B", text:"當傷口有滲液時需持續使用濕敷，傷口乾燥時需持續保持乾燥；負壓傷口照護和高壓氧治療都可以促進潰瘍癒合。", answer:false, exp:"現代傷口護理：(1)「濕潤環境」有利癒合，乾燥傷口並非最佳；(2)滲液多的傷口應使用吸收性敷料（foam, alginate）而非持續 wet dressing；(3)負壓治療（NPWT）有效，高壓氧在特定適應症有幫助。簡單濕/乾二分法是過時的觀念。" },
+    { sub:"C", text:"糖尿病足感染若治療24至48小時後反應不佳，需換上廣效型抗生素。", answer:false, exp:"糖尿病足感染抗生素：初始選擇廣效覆蓋，若48-72小時無改善，應「升階（escalation）」或根據培養調整，而非只換廣效型；且初始已應廣效覆蓋，48小時改為廣效的描述邏輯有誤。" },
+    { sub:"D", text:"血管重建可減緩糖尿病病患接近三成的嚴重肢體缺血截肢率，兩種方式（開放vs血管內）傷口復原率和截肢率相當。", answer:true, exp:"BASIL trial 和多項研究：血管重建（revascularization）可將截肢率降低約30%；open bypass vs. endovascular（PTA/stenting）在重症肢體缺血（CLI）患者的1年傷口癒合率和截肢率相當（open 長期較優），符合敘述。" }
+  ]},
+  { id:89, group:"夏柯式神經骨關節病變", text:"下列關於 Charcot arthropathy", subs: [
+    { sub:"A", text:"分類上依據臨床表現和解剖位置分別使用 Brodsky 和 Eichenholtz 分類，腳踝依有無跟骨結節骨折再分成3A和3B。", answer:false, exp:"Eichenholtz 分類：依臨床和影像分3期（I炎症/II癒合/III重塑）；Brodsky 分類：依解剖位置（Type 1中足、2跟骨、3A踝、3B後跟骨結節），3A和3B是以「踝關節 vs 跟骨結節」區分，並非「有無跟骨結節骨折」，細節描述有誤。" },
+    { sub:"B", text:"可利用抬腿五分鐘後紅腫是否消散和 ESR 是否超過70mm/hr 來區分 Charcot arthropathy 和感染。", answer:true, exp:"Charcot vs 感染鑑別：(1)elevation test—抬腿5分鐘後紅腫消散→Charcot（充血性），不消散→蜂窩性組織炎；(2)ESR > 70mm/hr + CRP 升高→支持慢性骨髓炎；兩者結合有助鑑別。" },
+    { sub:"C", text:"手術通常不建議在第一期進行，一般會等到第三期才進行，手術目的是重建穩定可以穿鞋的腳。", answer:true, exp:"Charcot 手術時機：活躍炎症期（Eichenholtz Stage I）骨質脆弱，固定失敗率高，不建議手術；等待 Stage III（重塑期，骨質硬化穩定）再手術，目的是「重建穩定的可穿鞋腳型（plantigrade, shoeable foot）」。" },
+    { sub:"D", text:"若是有感染，則需先使用外固定，待感染清除後再轉內固定，術後至少保持12-16週不負重。", answer:true, exp:"Charcot 合併感染的手術策略：(1)先清創＋外固定（清除感染）→(2)感染控制後轉換內固定（重建穩定）；術後 non-weight bearing 至少12-16週（等待融合），同時維持軟組織覆蓋，是標準治療流程。" }
+  ]},
+  { id:90, group:"足弓變形", text:"下列關於足弓變形", subs: [
+    { sub:"A", text:"進展式塌陷足變形的順序：後脛肌腱功能障礙和跟舟韌帶（spring ligament）變薄，導致中足塌陷和跟骨外翻，距骨旋轉導致距舟關節覆蓋減少。", answer:false, exp:"Progressive collapsing foot deformity（PCFD）的正確順序：(1)後脛肌腱功能障礙＋spring ligament 撕裂→(2)距骨「跖屈和內收（head drops down and medially）」→(3)距舟關節覆蓋減少＋跟骨外翻→(4)前足外展。描述中「中足塌陷先於跟骨外翻」的順序和距骨旋轉方向描述不精確。" },
+    { sub:"B", text:"若距舟關節覆蓋大於一半，則建議做外柱延長術，不論年輕或老人效果都很好。若踝關節軟骨磨損小於一半且為可變型，則可做三角韌帶重建。", answer:true, exp:"PCFD 手術決策：talonavicular coverage > 50%（可矯正，flexible）→外柱延長（lateral column lengthening）；踝關節 OA < 50% 軟骨磨損且 flexible→三角韌帶重建（deltoid reconstruction）以矯正跟骨外翻。這些是 current evidence-based 指引。" },
+    { sub:"C", text:"CMT disease 的神經病變順序為內部肌肉（intrinsic muscle）、腓短肌、前脛肌，所以腓長肌和後脛肌較有力，造成掌曲及高弓足變形。", answer:false, exp:"CMT 病變由遠端至近端：(1)intrinsic muscles（足內部肌）→(2)peroneus brevis（腓短肌）→(3)tibialis anterior（前脛肌），因此腓長肌（peroneus longus）和後脛肌（tibialis posterior）相對保存→造成足底屈（plantarflexion）和 hindfoot varus，形成 cavovarus foot。但腓長肌過強本身造成第一蹠骨下壓（forefoot pronation），後脛肌過強造成後足內翻。描述順序有誤。" },
+    { sub:"D", text:"高弓內翻足使用 Coleman block test，將木板放置腳跟及內側足部，若後足內翻可被矯正則為可變性或前足導致的。", answer:false, exp:"Coleman block test：將木板放置於「後跟和外側足部」（heel and lateral forefoot），讓第一蹠骨懸空（不受壓），若後足內翻自然矯正→代表是「前足（第一蹠骨）」驅動的高弓內翻；若不矯正→後足固定性內翻。此題描述木板放置位置（腳跟及「內側」足部）是相反的。" }
+  ]},
+  { id:91, group:"足部肌腱韌帶", text:"下列關於足部肌腱韌帶疾病", subs: [
+    { sub:"A", text:"阿基里斯腱斷裂保守治療的再斷裂率和返回運動比例已和開刀差不多，但只限於兩天內固定的中段斷裂。", answer:false, exp:"現代阿基里斯腱斷裂保守治療（早期 functional rehabilitation protocol）：再斷裂率已降至約3-5%（接近手術），但適用範圍不限於「兩天內」，關鍵是早期置於馬蹄位固定（ equinus position）並進行功能性復健；「兩天內」的限制過嚴，描述有誤。" },
+    { sub:"B", text:"不論何種阿基里斯腱病變，清創超過一半的截面積都需使用曲姆趾長肌做肌腱轉移。", answer:false, exp:"Achilles tendon debridement 後肌腱轉移的適應症：當清創超過「50%（有些文獻說30-50%）」的截面積時，需 FHL（flexor hallucis longus，拇長屈肌，非「曲姆趾長肌/FHB」）轉移。且 FHL 和 FDL 都有用，描述細節（50% threshold vs. anatomic designation）需核查。" },
+    { sub:"C", text:"足底筋膜炎保守治療中，類固醇需要避免，因為可能造成足底筋膜斷裂甚至腳跟脂肪萎縮，超過半年無效則可考慮體外震波治療。", answer:true, exp:"PF 治療：(1)初始 = NSAIDs、stretching、night splint（效果不穩定）；(2)Corticosteroid 注射風險：plantar fascia rupture、fat pad atrophy，一般避免多次注射；(3)ESWT（體外震波）= 保守治療 6 個月失敗後的次選，有良好證據。" },
+    { sub:"D", text:"Lisfranc injury X 光可見位移超過2mm 則建議手術，手術以 ORIF 為主，初級融合術較用在延遲診斷、單純韌帶損傷、肥胖或糖尿病患者。", answer:true, exp:"Lisfranc injury：(1)位移 > 2mm → 手術；(2)ORIF（復位固定）= 主要術式，但需術後移除硬體；(3)Primary arthrodesis（初級融合）= 適合 purely ligamentous（無骨折，難以固定）、延遲診斷（>6週）、高 BMI / DM 患者，減少硬體失敗率。" }
+  ]},
+  { id:92, group:"新興科技", text:"下列關於新興科技", subs: [
+    { sub:"A", text:"所謂的5D 列印，是指使可使用選定的材料來列印，並針對環境缺損處填補上對應的缺損。", answer:false, exp:"4D 列印：可隨時間或刺激（溫度、磁場、水）改變形狀的智能材料；5D 列印更多指「多軸（5軸）列印頭」可從多個方向列印，或整合第四/五維（時間、功能）的概念，並非「針對環境缺損填補」的描述。" },
+    { sub:"B", text:"使用3D 列印的鑽孔導引器可以有效減少術中螢光透視的使用時間和失血量，並增加準確度，在脊椎手術打椎弓螺釘已得到證實，在小兒骨科、關節置換和創傷骨科時也都有一樣的好處。", answer:true, exp:"3D printed patient-specific drill guides / PSI：已有多項研究證實減少術中 fluoroscopy time、手術時間和失血量，提高植入物定位準確度；在 pedicle screw insertion、pediatric orthopedics、arthroplasty 和 trauma 中均有類似的益處（雖各領域研究數量不一）。" },
+    { sub:"C", text:"機械手臂和電腦導航聯合應用，術後功能雖無明顯差異，但植入物的壽命明顯增加。", answer:false, exp:"Robotic + navigation TKA/THA：研究顯示較佳的植入物對位精準度，但「植入物壽命明顯增加」需長期（>10-15年）follow-up data；目前短中期研究顯示無功能差異，長期存活率數據仍不足以說「壽命明顯增加」。" },
+    { sub:"D", text:"擴增實境（augmented reality）已開始在各式各樣的手術中使用，但技術尚未成熟，仍需要3D 視覺演算和註冊定位來輔助。", answer:true, exp:"AR 手術：已用於脊椎、骨科、顱顏等手術，提供即時解剖重疊；但「registration accuracy（配準精確度）」和「3D visualization algorithm」仍是技術瓶頸，需要持續改進才能在術中達到可靠應用。" }
+  ]},
+  { id:93, group:"創傷護理", text:"關於早期適當護理（EAC）", subs: [
+    { sub:"A", text:"乳酸水平矯正至低於2.0 mmol/L，可以減少在確定性治療中的肺部併發症風險。", answer:false, exp:"EAC（Early Appropriate Care）研究（Vallier 等）：乳酸「< 4.0 mmol/L」是進行確定性骨折手術的生理代謝安全指標，超過4.0 mmol/L的患者確定性手術後肺部併發症增加，並非2.0 mmol/L。" },
+    { sub:"B", text:"乳酸水平矯正至低於3.0 mmol/L，可以減少在確定性治療中的肺部併發症風險。", answer:false, exp:"如上，正確答案是 < 4.0 mmol/L。" },
+    { sub:"C", text:"乳酸水平矯正至低於4.0 mmol/L，可以減少在確定性治療中的肺部併發症風險。", answer:true, exp:"EAC 研究關鍵發現：乳酸 ≥ 4.0 mmol/L 的多發創傷患者進行早期確定性骨折手術（如股骨骨折 IMN）會增加 ARDS 和肺部併發症風險；乳酸矯正至 < 4.0 mmol/L 是手術的生理安全門檻。" },
+    { sub:"D", text:"乳酸水平矯正至低於5.0 mmol/L，可以減少在確定性治療中的肺部併發症風險。", answer:false, exp:"正確答案是 < 4.0 mmol/L，不是5.0。" }
+  ]},
+  { id:94, group:"開放性骨折", text:"開放性骨折的初步處理", subs: [
+    { sub:"A", text:"傷口清潔和敷料包紮。", answer:false, exp:"傷口清潔（沖洗）不是急診急救室的首要步驟，清創應在手術室進行；急診室應進行的是移除明顯污染物、以生理鹽水濕敷料覆蓋，而非完整清潔。" },
+    { sub:"B", text:"進行神經血管檢查和腔室症候群評估。", answer:false, exp:"神經血管評估是重要的，但並不「包含」傷口清潔和固定，不能作為開放骨折處理的「完整」初步處理描述。" },
+    { sub:"C", text:"清除傷口污染，蓋上生理鹽水濕敷料，固定並進行神經血管檢查和腔室症候群評估。", answer:true, exp:"開放骨折初步處理（急診）：(1)移除明顯污染物，(2)生理鹽水濕敷料覆蓋傷口，(3)夾板/固定（splinting），(4)NV status 評估，(5)CS 評估，(6)急速給予抗生素；完整流程見 ATLS 指引。" },
+    { sub:"D", text:"直接送往手術室進行清創。", answer:false, exp:"直接送往 OR 忽略了初步穩定、傷口覆蓋、NV 評估等重要步驟，且血流動力學不穩定患者需先處理生命跡象，而非直接清創。不是正確的完整初步處理描述。" }
+  ]},
+  { id:95, group:"肩鎖關節損傷", text:"在肩鎖關節損傷中，哪類型需要手術治療", subs: [
+    { sub:"A", text:"type I 和 type II", answer:false, exp:"Rockwood AC joint injury：Type I（AC 韌帶扭傷）和 Type II（AC 韌帶斷裂，CC 完整）均為「保守治療」，症狀通常在數週緩解。" },
+    { sub:"B", text:"type III", answer:false, exp:"Type III（AC + CC 韌帶均斷裂，鎖骨遠端移位 < 100%）：手術 vs 保守治療仍有爭議，多數運動員或重體力勞動者建議手術，但對一般患者保守治療結果也不錯；並非一律需要手術。" },
+    { sub:"C", text:"type IV 和 type VI", answer:true, exp:"Type IV（鎖骨後方移位，穿入斜方肌）和 Type VI（鎖骨移位至喙突下，罕見）：因位置異常（可能壓迫血管神經）需手術治療；Type V（> 100% 移位）也普遍建議手術。" },
+    { sub:"D", text:"type V", answer:false, exp:"Type V 雖通常需手術，但此題正確答案選 Type IV 和 VI（考題設計如此），且 Type V 單選也不完整。" }
+  ]},
+  { id:96, group:"近端肱骨骨折", text:"在老年人口中，哪種治療選擇已大致取代半關節置換術", subs: [
+    { sub:"A", text:"非手術治療。", answer:false, exp:"非手術治療適用於移位輕微（< 1cm，< 45°）的骨折；對複雜多部分骨折，非手術治療並未「取代」半肩置換，而是另一選擇。" },
+    { sub:"B", text:"鋼板復位內固定手術(ORIF)。", answer:false, exp:"Plate ORIF：對老年骨質疏鬆患者，locking plate 有螺釘切割（screw cut-out）等問題，長期結果不優，並未「取代」半肩置換成為主流。" },
+    { sub:"C", text:"髓內釘固定(IMN)。", answer:false, exp:"IMN（intramedullary nail）：近端肱骨骨折的 IMN 有特定適應症，但在老年多部分骨折中，並未成為主流取代選項。" },
+    { sub:"D", text:"反向全肩關節置換術(rTSA)。", answer:true, exp:"近十年 rTSA（反向全肩置換）已逐漸取代 hemiarthroplasty（半肩）成為老年（> 70歲）複雜近端肱骨骨折的主要手術選項，因其功能結果更可預期，不依賴旋轉肌腱癒合，肱骨結節不癒合的影響較小。" }
+  ]},
+  { id:97, group:"遠端肱骨骨折", text:"遠端肱骨骨折：尺神經移位術 vs 原位釋放", subs: [
+    { sub:"A", text:"尺神經移位組。", answer:true, exp:"Meta-analysis（362名患者）：尺神經移位術（transposition）的術後 ulnar neuropathy 發生率「高於」原位釋放（in situ release）；因此目前趨勢傾向不常規進行移位，除非術前已有尺神經症狀，改用原位釋放降低神經損傷風險。" },
+    { sub:"B", text:"尺神經原位釋放組。", answer:false, exp:"原位釋放的尺神經病變發生率較低，因為避免了移位手術本身對神經血供的干擾。" },
+    { sub:"C", text:"兩組相同。", answer:false, exp:"研究顯示兩組有顯著差異，移位組較高。" },
+    { sub:"D", text:"研究中未提及尺神經病變率。", answer:false, exp:"這是研究的主要比較終點之一。" }
+  ]},
+  { id:98, group:"Terrible Triad", text:"關於 Terrible Triad Injuries 的治療", subs: [
+    { sub:"A", text:"橈骨頭關節置換術。", answer:true, exp:"Terrible Triad（橈骨頭骨折＋冠狀突骨折＋肘脫位）：2019年 meta-analysis 顯示橈骨頭關節置換術（radial head arthroplasty）在 DASH 分數、MEPS、活動範圍和術後併發症方面的結果優於 ORIF，尤其對粉碎性橈骨頭骨折（Mason III）。" },
+    { sub:"B", text:"開放復位內固定。", answer:false, exp:"ORIF（尤其粉碎性骨折）：技術困難，失敗率較高，結果不如 arthroplasty。" },
+    { sub:"C", text:"尺骨頭關節置換術。", answer:false, exp:"尺骨頭置換不是 Terrible Triad 的主要選項。" },
+    { sub:"D", text:"橈骨頭切除術。", answer:false, exp:"Radial head excision 在 Terrible Triad 中禁忌，會造成更嚴重的不穩定（失去外側支撐）。" }
+  ]},
+  { id:99, group:"遠端橈骨骨折", text:"根據 WRIST 研究的2020年次級分析，什麼因素與70歲以上患者的手握力下降相關", subs: [
+    { sub:"A", text:"最終 X 光片上的位移增加。", answer:true, exp:"WRIST study 次級分析（70歲以上患者）：最終隨訪 X 光上的「骨折位移（final radiographic displacement）」是手握力下降的獨立預測因子，支持在可耐受手術的老年患者中考慮更積極的固定以維持復位。" },
+    { sub:"B", text:"手術延遲超過一週。", answer:false, exp:"手術時機在此研究中不是手握力的獨立預測因子。" },
+    { sub:"C", text:"手術前期增加的疼痛。", answer:false, exp:"術前疼痛並非此分析的獨立預測因子。" },
+    { sub:"D", text:"使用腹側鎖定板（VLP）治療。", answer:false, exp:"手術方式（VLP vs cast）本身不是手握力預測因子，而是位移量。" }
+  ]},
+  { id:100, group:"舟狀骨骨折MRI", text:"關於 Scaphoid 骨折病人在急診部進行 MRI 的2019年 RCT 研究", subs: [
+    { sub:"A", text:"在急診部進行 MRI 可以降低3個月的總醫療成本。", answer:true, exp:"2019年 RCT（Carpenter CR 等）：急診 MRI 評估疑似舟狀骨骨折，雖然 MRI 本身費用較高，但透過減少不必要的固定、隨訪就診次數和後續影像，在「3個月的總醫療費用」上反而低於傳統骨折特定臨床處置，支持急診 MRI 的成本效益。" },
+    { sub:"B", text:"MRI 無法準確診斷急性 Scaphoid 骨折。", answer:false, exp:"MRI 對急性舟狀骨骨折的診斷準確性高（sensitivity ~97%, specificity ~99%），是最準確的早期診斷工具。" },
+    { sub:"C", text:"MRI 與傳統 X 光診斷方法相比效果不佳。", answer:false, exp:"MRI 在急性舟狀骨骨折的診斷上遠優於 X 光（X 光初次陰性率高達15-20%）。" },
+    { sub:"D", text:"MRI 使用增加了急診部的等待時間。", answer:false, exp:"雖然 MRI 需要一定等待時間，但在此研究的主要結論（成本降低）中，等待時間並非主要負面發現。" }
+  ]}
+];
+
+// Flatten into individual sub-questions
+let allItems = [];
+questions.forEach(q => {
+  q.subs.forEach(sub => {
+    allItems.push({
+      qId: q.id,
+      group: q.group,
+      qText: q.text,
+      sub: sub.sub,
+      text: sub.text,
+      answer: sub.answer,
+      exp: sub.exp,
+      userAnswer: null
+    });
+  });
+});
+
+let currentFilter = 'all';
+
+function getFiltered() {
+  return allItems.filter(item => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'unanswered') return item.userAnswer === null;
+    if (currentFilter === 'correct') return item.userAnswer === item.answer && item.userAnswer !== null;
+    if (currentFilter === 'wrong') return item.userAnswer !== null && item.userAnswer !== item.answer;
+    return true;
+  });
+}
+
+function filterQuestions(type) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  render();
+}
+
+function answer(qId, sub, val) {
+  const idx = allItems.findIndex(i => i.qId === qId && i.sub === sub);
+  if (idx === -1 || allItems[idx].userAnswer !== null) return;
+  allItems[idx].userAnswer = val;
+  updateStats();
+  render();
+}
+
+function updateStats() {
+  const answered = allItems.filter(i => i.userAnswer !== null).length;
+  const correct = allItems.filter(i => i.userAnswer === i.answer && i.userAnswer !== null).length;
+  const wrong = answered - correct;
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+  document.getElementById('progressBar').style.width = (answered / allItems.length * 100) + '%';
+  // Update filter labels
+  const unanswered = allItems.filter(i => i.userAnswer === null).length;
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns[0].textContent = `全部 (${allItems.length})`;
+  filterBtns[1].textContent = `未作答 (${unanswered})`;
+  filterBtns[2].textContent = `已答對 (${correct})`;
+  filterBtns[3].textContent = `已答錯 (${wrong})`;
+  document.getElementById('navInfo').textContent = `顯示 ${getFiltered().length} 題`;
+}
+
+function render() {
+  const filtered = getFiltered();
+  const container = document.getElementById('quizContainer');
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">🎉</div><p>此分類目前沒有題目</p></div>';
+    return;
+  }
+  container.innerHTML = filtered.map(item => renderItem(item)).join('');
+  document.getElementById('navInfo').textContent = `顯示 ${filtered.length} 題`;
+}
+
+function renderItem(item) {
+  const answered = item.userAnswer !== null;
+  const isCorrect = answered && item.userAnswer === item.answer;
+  const isWrong = answered && item.userAnswer !== item.answer;
+  const correctVal = item.answer;
+
+  const cardClass = answered ? (isCorrect ? 'answered-correct' : 'answered-wrong') : '';
+  const badge = answered ? `<div class="result-badge ${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? '✓ 正確' : '✗ 答錯'}</div>` : '';
+
+  const trueClass = !answered ? '' : (correctVal === true ? 'correct' : (item.userAnswer === true ? 'wrong' : ''));
+  const falseClass = !answered ? '' : (correctVal === false ? 'correct' : (item.userAnswer === false ? 'wrong' : ''));
+  const disabled = answered ? 'disabled' : '';
+
+  const expHtml = answered ? `
+    <div class="explanation show">
+      <div class="exp-title">📖 詳解</div>
+      <div class="correct-mark">✓ 正確答案：${item.answer ? '○（是）' : '×（非）'}</div>
+      <div>${item.exp}</div>
+    </div>` : '';
+
+  return `
+    <div class="q-card ${cardClass}" id="card-${item.qId}-${item.sub}">
+      ${badge}
+      <div class="q-header">
+        <div class="q-num">${item.qId}${item.sub}</div>
+        <div>
+          <div class="q-category">${item.group}</div>
+          <div class="q-sub">${item.qText}</div>
+          <div class="q-text">${item.sub}. ${item.text}</div>
+        </div>
+      </div>
+      <div class="options">
+        <div class="option ${trueClass} ${disabled}" onclick="answer(${item.qId}, '${item.sub}', true)">
+          <div class="option-label">○</div>
+          <div>是（True）</div>
+        </div>
+        <div class="option ${falseClass} ${disabled}" onclick="answer(${item.qId}, '${item.sub}', false)">
+          <div class="option-label">×</div>
+          <div>非（False）</div>
+        </div>
+      </div>
+      ${expHtml}
+    </div>`;
+}
+
+function showScore() {
+  const answered = allItems.filter(i => i.userAnswer !== null).length;
+  const correct = allItems.filter(i => i.userAnswer === i.answer && i.userAnswer !== null).length;
+  const score = Math.round(correct / allItems.length * 100);
+  const card = document.getElementById('scoreCard');
+  document.getElementById('scoreBig').textContent = score + '分';
+  document.getElementById('scoreCorrect').textContent = correct;
+  let grade = '';
+  if (score >= 90) grade = '🏆 優秀！通過率甲等';
+  else if (score >= 80) grade = '🎯 良好！繼續加油';
+  else if (score >= 70) grade = '📚 及格，建議複習錯題';
+  else grade = '💪 需要加強，多看詳解';
+  document.getElementById('scoreGrade').textContent = grade;
+  card.classList.add('show');
+  card.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  if (!confirm('確定要重新作答嗎？所有答案將被清除。')) return;
+  allItems.forEach(i => i.userAnswer = null);
+  currentFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach((b, idx) => {
+    b.classList.toggle('active', idx === 0);
+  });
+  document.getElementById('scoreCard').classList.remove('show');
+  updateStats();
+  render();
+}
+
+// Initial render
+updateStats();
+render();
+</script>
+</body>
+</html>
